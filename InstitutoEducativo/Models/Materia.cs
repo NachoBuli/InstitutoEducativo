@@ -6,6 +6,8 @@ public class Materia
 {
 	public Materia()
 	{
+	}
+
 	public Guid MateriaId { get; set; }
 
 	public string CodigoMateria { get; set; }
@@ -16,11 +18,9 @@ public class Materia
 
 	public int CupoMaximo { get; set; }
 
-	public ICollection <MateriaCursada> MateriasCursadas { get; set; }
+	public ICollection<MateriaCursada> MateriasCursadas { get; set; }
 
-	public ICollection <Calificacion> Calificaciones { get; set; }
+	public ICollection<Calificacion> Calificaciones { get; set; }
 
 	public Carrera carrera { get; set; }
-
-}
 }
