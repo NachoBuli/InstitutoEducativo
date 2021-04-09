@@ -1,17 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-public class Carrera
+namespace InstitutoEducativo.Models
 {
-	public Guid CarreraId { get; set; }
 
-	public string Nombre { get; set; }
-
-	public ICollection <Materia> Materias { get; set; }
-
-	public ICollection <Alumno> Alumnos { get; set; }
-
-
-	public Carrera()
+	public class Carrera
 	{
+		private Guid CarreraId { get; set; }
+
+		private string Nombre { get; set; }
+
+		private ICollection<Materia> Materias { get; set; }
+
+		private ICollection<Alumno> Alumnos { get; set; }
+
+
+		public Carrera()
+		{
+		}
 	}
 }

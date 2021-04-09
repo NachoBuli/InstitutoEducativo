@@ -1,10 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-public class Empleado : Usuario
+namespace InstitutoEducativo.Models
 {
-	public Empleado()
-	{
-	}
+	public class Empleado : Persona
 
-	private string legajo { get; set; }
+	{
+		private string legajo { get; set; }
+
+		public Empleado()
+		{
+
+		}
+
+
+	}
 }
