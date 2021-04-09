@@ -1,8 +1,8 @@
 # Instituto Educativo 📖
 
 ## Objetivos 📋
-Desarrollar un sistema, que permita la administración general de un Instituto Educativo (de cara a los Empleados): Profesores, Alumnos, Materias, Cursos, Calificaciones, Carreras, etc., como así también, permitir a los Profesores, realizar calificaciones y de cara a los Alumnos matricularse en las materias pendientes.
-Utilizar Visual Studio 2019 preferentemente y crear una aplicación utilizando ASP.NET MVC Core (versión a definir por el docente 2.2 o 3.1).
+Desarrollar un sistema, que permita la administración general de un Instituto Educativo(de cara a los Empleados): Profesores, Alumnos, Materias, Cursos, Calificaciones, Carreras, etc., como así también, permitir a los Profesores, realizar calificaciones y de cara a los Alumnos matricularse en las materias pendientes.
+Utilizar Visual Studio 2019 preferentemente y crear una aplicación utilizando ASP.NET MVC Core (versión a de finir por el docente 2.2 o 3.1).
 
 <hr />
 

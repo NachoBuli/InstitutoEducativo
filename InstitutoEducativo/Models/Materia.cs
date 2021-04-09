@@ -1,26 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-
-public class Materia
+namespace InstitutoEducativo.Models
 {
-	public Materia()
+	public class Materia
 	{
+		public Materia()
+		{
+		}
+
+		private Guid MateriaId { get; set; }
+
+		private string CodigoMateria { get; set; }
+
+		private string Nombre { get; set; }
+
+		private string Descripcion { get; set; }
+
+		private int CupoMaximo { get; set; }
+
+		private ICollection<MateriaCursada> MateriasCursadas { get; set; }
+
+		private ICollection<Calificacion> Calificaciones { get; set; }
+
+		public Carrera carrera { get; set; }
 	}
-
-	public Guid MateriaId { get; set; }
-
-	public string CodigoMateria { get; set; }
-
-	public string Nombre { get; set; }
-
-	public string Descripcion { get; set; }
-
-	public int CupoMaximo { get; set; }
-
-	public ICollection<MateriaCursada> MateriasCursadas { get; set; }
-
-	public ICollection<Calificacion> Calificaciones { get; set; }
-
-	public Carrera carrera { get; set; }
 }

@@ -1,15 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-public class Profesor : Usuario
+namespace InstitutoEducativo.Models
+{ 
+public class Profesor : Persona
+
 {
-	public string Legajo { get; set; }
+	private string Legajo { get; set; }
 
-	public ICollection <MateriaCursada> MateriasCursadasActivas { get; set; }
-	
-	public ICollection <Calificacion> CalificacionesRealizadas { get; set; }
+	private ICollection<MateriaCursada> MateriasCursadasActivas { get; set; }
+
+	private ICollection<Calificacion> CalificacionesRealizadas { get; set; }
 
 	public Profesor()
 	{
 
 	}
+}
 }
