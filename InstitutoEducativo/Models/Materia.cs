@@ -25,6 +25,6 @@ namespace InstitutoEducativo.Models
 
 		public ICollection<Calificacion> Calificaciones { get; set; }
 
-		public Carrera carrera { get; set; }
+		public Carrera Carrera { get; set; }
 	}
 }

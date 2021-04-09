@@ -10,7 +10,7 @@ namespace InstitutoEducativo.Models
 	{
 		public Guid MateriaCursadaId { get; set; }
 
-		public String Nombre { get; set; }
+		public string Nombre { get; set; }
 
 		public int Anio { get; set; }
 
