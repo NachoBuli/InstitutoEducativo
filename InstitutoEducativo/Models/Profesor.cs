@@ -8,11 +8,11 @@ namespace InstitutoEducativo.Models
 public class Profesor : Persona
 
 {
-	private string Legajo { get; set; }
+	public string Legajo { get; set; }
 
-	private ICollection<MateriaCursada> MateriasCursadasActivas { get; set; }
+	public ICollection<MateriaCursada> MateriasCursadasActivas { get; set; }
 
-	private ICollection<Calificacion> CalificacionesRealizadas { get; set; }
+	public ICollection<Calificacion> CalificacionesRealizadas { get; set; }
 
 	public Profesor()
 	{

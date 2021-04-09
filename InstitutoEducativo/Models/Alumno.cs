@@ -9,19 +9,19 @@ namespace InstitutoEducativo.Models
 	public class Alumno : Persona
 	{
 
-		private Guid AlumnoId { get; set; }
+		public Guid AlumnoId { get; set; }
 
-		private DateTime FechaAlta { get; set; }
+		public DateTime FechaAlta { get; set; }
 
-		private Boolean Activo { get; set; }
+		public Boolean Activo { get; set; }
 
-		private int NumeroMatricula { get; set; }
+		public int NumeroMatricula { get; set; }
 
-		private List<AlumnoMateriaCursada> AlumnoMateriaCursada {get;set;}
+		public List<AlumnoMateriaCursada> AlumnoMateriaCursada {get;set;}
 
-		private Carrera Carrera { get; set; }
+		public Carrera Carrera { get; set; }
 
-		private List<Calificacion> Calificaciones { get; set; }
+		public List<Calificacion> Calificaciones { get; set; }
 
 
 		public Alumno()

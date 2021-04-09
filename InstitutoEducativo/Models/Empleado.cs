@@ -8,7 +8,7 @@ namespace InstitutoEducativo.Models
 	public class Empleado : Persona
 
 	{
-		private string legajo { get; set; }
+		public string Legajo { get; set; }
 
 		public Empleado()
 		{

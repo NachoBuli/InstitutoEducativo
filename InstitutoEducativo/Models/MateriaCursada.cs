@@ -8,23 +8,23 @@ namespace InstitutoEducativo.Models
 
 	public class MateriaCursada
 	{
-		private Guid MateriaCursadaId { get; set; }
+		public Guid MateriaCursadaId { get; set; }
 
-		private String Nombre { get; set; }
+		public String Nombre { get; set; }
 
-		private int Anio { get; set; }
+		public int Anio { get; set; }
 
-		private int cuatrimestre { get; set; }
+		public int Cuatrimestre { get; set; }
 
-		private Boolean Activo { get; set; }
+		public Boolean Activo { get; set; }
 
-		private Materia Materia { get; set; }
+		public Materia Materia { get; set; }
 
-		private Profesor Profesor { get; set; }
+		public Profesor Profesor { get; set; }
 
-		private List<AlumnoMateriaCursada> AlumnoMateriaCursadas { get; set; }
+		public List<AlumnoMateriaCursada> AlumnoMateriaCursadas { get; set; }
 
-		private List<Calificacion> Calificaciones { get; set; }
+		public List<Calificacion> Calificaciones { get; set; }
 
 		public MateriaCursada()
 		{

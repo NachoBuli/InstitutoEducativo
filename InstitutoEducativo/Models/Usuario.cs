@@ -3,13 +3,13 @@
 public class Usuario
 {
 
-	private Guid UsuarioId { get; set; }
+	public Guid UsuarioId { get; set; }
 
-	private string Nombre { get; set; }
+	public string Nombre { get; set; }
 
-	private DateTime FechaAlta { get; set; }
+	public DateTime FechaAlta { get; set; }
 
-	private string Password { get; set; }
+	public string Password { get; set; }
 	
 	public  Usuario()
 	{

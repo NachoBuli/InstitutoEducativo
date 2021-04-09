@@ -9,6 +9,7 @@ namespace InstitutoEducativo.Models
     {
 
         public Guid PersonaId { get; set; }
+
         public string Nombre { get; set; }
 
         public string Apellido { get; set; }

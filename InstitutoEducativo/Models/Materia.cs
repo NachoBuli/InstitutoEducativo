@@ -11,19 +11,19 @@ namespace InstitutoEducativo.Models
 		{
 		}
 
-		private Guid MateriaId { get; set; }
+		public Guid MateriaId { get; set; }
 
-		private string CodigoMateria { get; set; }
+		public string CodigoMateria { get; set; }
 
-		private string Nombre { get; set; }
+		public string Nombre { get; set; }
 
-		private string Descripcion { get; set; }
+		public string Descripcion { get; set; }
 
-		private int CupoMaximo { get; set; }
+		public int CupoMaximo { get; set; }
 
-		private ICollection<MateriaCursada> MateriasCursadas { get; set; }
+		public ICollection<MateriaCursada> MateriasCursadas { get; set; }
 
-		private ICollection<Calificacion> Calificaciones { get; set; }
+		public ICollection<Calificacion> Calificaciones { get; set; }
 
 		public Carrera carrera { get; set; }
 	}
