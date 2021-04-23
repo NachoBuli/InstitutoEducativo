@@ -24,10 +24,5 @@ namespace InstitutoEducativo.Models
 
 		public List<AlumnoMateriaCursada> AlumnoMateriaCursadas { get; set; }
 
-		public List<Calificacion> Calificaciones { get; set; }
-
-		public MateriaCursada()
-		{
-		}
 	}
 }

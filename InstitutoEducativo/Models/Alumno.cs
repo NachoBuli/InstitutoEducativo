@@ -9,7 +9,6 @@ namespace InstitutoEducativo.Models
 	public class Alumno : Persona
 	{
 
-		public Guid AlumnoId { get; set; }
 
 		public DateTime FechaAlta { get; set; }
 
@@ -17,11 +16,9 @@ namespace InstitutoEducativo.Models
 
 		public int NumeroMatricula { get; set; }
 
-		public List<AlumnoMateriaCursada> AlumnoMateriaCursada {get;set;}
+		public List<AlumnoMateriaCursada> AlumnosMateriasCursadas {get;set;}
 
 		public Carrera Carrera { get; set; }
-
-		public List<Calificacion> Calificaciones { get; set; }
 
 
 		public Alumno()

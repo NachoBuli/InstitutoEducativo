@@ -7,15 +7,16 @@ namespace InstitutoEducativo.Models
 {
 	public class AlumnoMateriaCursada
 	{
-		public Guid PersonaId { get; set; }
+		public Guid AlumnoId { get; set; }
 
 		public Guid MateriaCursadaId { get; set; }
 
-		public AlumnoMateriaCursada() { }
-
-        public Persona Persona { get; set; }
+        public Alumno Alumno { get; set; }
 
         public MateriaCursada MateriaCursada { get; set; }
+
+		public Calificacion Calificacion { get; set; }
+
 	}
 	
 }

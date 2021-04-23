@@ -17,9 +17,7 @@ namespace InstitutoEducativo.Models
 
 		public Alumno Alumno { get; set; }
 
-		public Calificacion()
-		{
-		}
+	
 
 	}
 }
