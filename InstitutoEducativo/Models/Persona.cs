@@ -11,7 +11,19 @@ namespace InstitutoEducativo.Models
     public class Persona
     {
         [Key]
-        public Guid PersonaId { get; set; }
+        public Guid Id { get; set; }
+
+        [Required(ErrorMessage = Validaciones._required)]
+        [MaxLength(ErrorMessage = Validaciones._maxLength)]
+        public string UserName { get; set; }
+
+        [Required(ErrorMessage = Validaciones._required)]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime FechaAlta { get; set; }
 
         [Required (ErrorMessage = Validaciones._required)]
         [MaxLength(50, ErrorMessage = Validaciones._maxLength)]
@@ -20,9 +32,6 @@ namespace InstitutoEducativo.Models
         [Required(ErrorMessage = Validaciones._required)]
         [MaxLength(50, ErrorMessage = Validaciones._maxLength)]
         public string Apellido { get; set; }
-
-        [ForeignKey(nameof(Usuario))]
-        public Usuario Usuario { get; set; }
 
         [Required(ErrorMessage = Validaciones._required)]
         [RegularExpression(@"[0-9]{8}", ErrorMessage = "Ingresá tu DNI sin puntos. Ej.: 12345678")]
@@ -38,10 +47,10 @@ namespace InstitutoEducativo.Models
         [MaxLength(100, ErrorMessage = Validaciones._maxLength)]
         public string Direccion { get; set; }
 
-       
-     
+        public string Legajo { get; set; }
 
-        
+
+
     }
 
     

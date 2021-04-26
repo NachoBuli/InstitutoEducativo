@@ -7,7 +7,6 @@ namespace InstitutoEducativo.Models
 {
 	public class AlumnoMateriaCursada
 	{
-		public Guid AlumnoId { get; set; }
 
 		public Guid MateriaCursadaId { get; set; }
 

@@ -10,8 +10,6 @@ namespace InstitutoEducativo.Models
 	{
 
 
-		public DateTime FechaAlta { get; set; }
-
 		public Boolean Activo { get; set; }
 
 		public int NumeroMatricula { get; set; }
