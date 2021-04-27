@@ -10,18 +10,16 @@ namespace InstitutoEducativo.Models
 	{
 
 
-		public Boolean Activo { get; set; }
+		public bool Activo { get; set; } // supongo que no resistriciones seran necesarios
 
-		public int NumeroMatricula { get; set; }
+		//public int NumeroMatricula { get; set; } --> No es suficiente tener el ID?
 
 		public List<AlumnoMateriaCursada> AlumnosMateriasCursadas {get;set;}
 
 		public Carrera Carrera { get; set; }
 
 
-		public Alumno()
-		{
-		}
+		
 
         
     }
