@@ -13,8 +13,6 @@ namespace InstitutoEducativo.Models
 		[Key]
 		public Guid MateriaId { get; set; }
 
-		public string CodigoMateria { get; set; } // --> el codigo de la materia no es el Id?
-
 		[Required(ErrorMessage = Validaciones._required)]
 		[MaxLength(100, ErrorMessage = Validaciones._maxLength)]
 		public string Nombre { get; set; }
