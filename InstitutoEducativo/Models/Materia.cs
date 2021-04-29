@@ -18,6 +18,10 @@ namespace InstitutoEducativo.Models
 		public string Nombre { get; set; }
 
 		[Required(ErrorMessage = Validaciones._required)]
+		[MaxLength(6, ErrorMessage = Validaciones._maxLength)]
+		public string CodigoMateria { get; set; }
+
+        [Required(ErrorMessage = Validaciones._required)]
 		[MaxLength(150, ErrorMessage = Validaciones._maxLength)]
 		public string Descripcion { get; set; }
 

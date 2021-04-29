@@ -14,16 +14,28 @@ namespace InstitutoEducativo.Models
 		[Required(ErrorMessage = Validaciones._required)]
 		public int NotaFinal { get; set; }
 
-		[Required(ErrorMessage = Validaciones._required)]
+        public AlumnoMateriaCursada AlumnoMateriaCursada { get; set; }
+
+
+        [Required(ErrorMessage = Validaciones._required)]
 		public Materia Materia { get; set; }
 
-		[Required(ErrorMessage = Validaciones._required)]
-		public MateriaCursada MateriaCursada { get; set; }
+        
 
-		public Profesor Profesor { get; set; }
+        [Required(ErrorMessage = Validaciones._required)]
+		public MateriaCursada MateriaCursada { get {
+				return AlumnoMateriaCursada.MateriaCursada;
+			}
+		}
+
+        public Guid ProfesorId { get; set; }
+        public Profesor Profesor { get; set; }
 
 		[Required(ErrorMessage = Validaciones._required)]
-		public Alumno Alumno { get; set; }
+		public Alumno Alumno { get {
+				return AlumnoMateriaCursada.Alumno;
+			}
+		}
 
 	
 

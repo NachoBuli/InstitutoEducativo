@@ -24,13 +24,15 @@ namespace InstitutoEducativo.Models
 		[Range(1, 2, ErrorMessage = "Ingresa un numero mayor a 1 y menor a 2")]
 		public int Cuatrimestre { get; set; }
 
-		public Boolean Activo { get; set; }
+		public bool Activo { get; set; }
 
 		public Materia Materia { get; set; }
 
 		public Profesor Profesor { get; set; }
 
 		public List<AlumnoMateriaCursada> AlumnoMateriaCursadas { get; set; }
+
+		public ICollection<Calificacion> Calificaciones { get; set; }
 
 	}
 }
