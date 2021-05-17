@@ -1,6 +1,8 @@
+using InstitutoEducativo.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,11 +25,12 @@ namespace InstitutoEducativo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DbContextInstituto>(options => options.UseSqlServer(Configuration.GetConnectionString("InstitutoEducativoCS")));
             services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbContextInstituto miContexto)
         {
             if (env.IsDevelopment())
             {
@@ -39,6 +42,7 @@ namespace InstitutoEducativo
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            miContexto.Database.Migrate();// --> asegura la base de datos y ejecuta todas las migraciones
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
