@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,6 +34,8 @@ namespace InstitutoEducativo.Models
 
 		public ICollection<Calificacion> Calificaciones { get; set; }
 
-		public Carrera Carrera { get; set; }
+		[ForeignKey(nameof(Carrera))]
+        public Guid CarreraId { get; set; }
+        public Carrera Carrera { get; set; }
 	}
 }
