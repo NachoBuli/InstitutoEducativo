@@ -10,6 +10,7 @@ namespace InstitutoEducativo.Models
 
 	public class Carrera
 	{
+		[Key]
 		public Guid CarreraId { get; set; }
 
 		[Required(ErrorMessage = Validaciones._required)]

@@ -11,19 +11,15 @@ namespace InstitutoEducativo.Models
 	{
         [Key,ForeignKey("Alumno")]
         public Guid AlumnoId { get; set; }
+        public Alumno Alumno { get; set; }
 
         
         [Key, ForeignKey("MateriaCursada")]
         public Guid MateriaCursadaId { get; set; }
-        
-
-
-        public Alumno Alumno { get; set; }
-
         public MateriaCursada MateriaCursada { get; set; }
 
+        [ForeignKey(nameof(Calificacion))]
         public Guid CalificacionId { get; set; }
-
         public Calificacion Calificacion { get; set; }
 
 	}

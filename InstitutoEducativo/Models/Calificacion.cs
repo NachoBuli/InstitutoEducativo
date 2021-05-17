@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,6 +29,7 @@ namespace InstitutoEducativo.Models
 			}
 		}
 
+		[ForeignKey(nameof(Profesor))]
         public Guid ProfesorId { get; set; }
         public Profesor Profesor { get; set; }
 
