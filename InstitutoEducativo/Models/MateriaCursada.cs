@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,8 +27,12 @@ namespace InstitutoEducativo.Models
 
 		public bool Activo { get; set; }
 
-		public Materia Materia { get; set; }
+		[ForeignKey(nameof(Materia))]
+        public Guid MateriaId { get; set; }
+        public Materia Materia { get; set; }
 
+		[ForeignKey(nameof(Profesor))]
+		public Guid ProfesorId { get; set; }
 		public Profesor Profesor { get; set; }
 
 		public List<AlumnoMateriaCursada> AlumnoMateriaCursadas { get; set; }
