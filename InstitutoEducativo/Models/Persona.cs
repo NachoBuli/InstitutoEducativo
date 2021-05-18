@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace InstitutoEducativo.Models
 {
-    public class Persona
+    public abstract class Persona 
     {
         [Key]
         public Guid Id { get; set; }

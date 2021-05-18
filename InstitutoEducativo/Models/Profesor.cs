@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace InstitutoEducativo.Models
 { 
-public class Profesor : Empleado
+public class Profesor : Persona // Antes de realizar la migracion heredaba de Empleado 
 
 {
 	
