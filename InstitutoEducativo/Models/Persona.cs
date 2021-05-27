@@ -14,7 +14,7 @@ namespace InstitutoEducativo.Models
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = Validaciones._required)]
-        [MaxLength(ErrorMessage = Validaciones._maxLength)]
+        [MaxLength(50, ErrorMessage = Validaciones._maxLength)]
         public string UserName { get; set; }
 
         [Required(ErrorMessage = Validaciones._required)]
