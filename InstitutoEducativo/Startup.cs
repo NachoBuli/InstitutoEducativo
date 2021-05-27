@@ -25,7 +25,21 @@ namespace InstitutoEducativo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DbContextInstituto>(options => options.UseSqlServer(Configuration.GetConnectionString("InstitutoEducativoCS")));
+            
+            if(Configuration.GetValue<bool>("DbInMem"))
+            {
+                services.AddDbContext<DbContextInstituto>(options => options.UseInMemoryDatabase("InstitutoEducativo"));
+            }
+            else
+            {
+                services.AddDbContext<DbContextInstituto>(options => options.UseSqlServer(Configuration.GetConnectionString("InstitutoEducativoCS")));
+            }
+            
+            
+            
+            
+ 
+
             services.AddControllersWithViews();
         }
 
@@ -42,7 +56,15 @@ namespace InstitutoEducativo
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            miContexto.Database.Migrate();// --> asegura la base de datos y ejecuta todas las migraciones
+
+
+            if (!Configuration.GetValue<bool>("DbInMem"))
+            {
+                miContexto.Database.Migrate();// --> asegura la base de datos y ejecuta todas las migraciones
+            }
+            
+            
+    
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
