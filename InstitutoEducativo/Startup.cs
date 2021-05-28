@@ -1,4 +1,5 @@
 using InstitutoEducativo.Data;
+using InstitutoEducativo.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,7 +35,8 @@ namespace InstitutoEducativo
             {
                 services.AddDbContext<DbContextInstituto>(options => options.UseSqlServer(Configuration.GetConnectionString("InstitutoEducativoCS")));
             }
-            
+            //Creo tabla intermedia entre Persona y Role
+            services.AddIdentity<Persona,Role>().AddEntityFrameworkStores<DbContextInstituto>();
             
             
             

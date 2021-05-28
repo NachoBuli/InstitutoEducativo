@@ -1,4 +1,6 @@
 ﻿using InstitutoEducativo.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace InstitutoEducativo.Data
 {
-    public class DbContextInstituto : DbContext
+    public class DbContextInstituto : IdentityDbContext<IdentityUser<Guid>,IdentityRole<Guid>,Guid>
     {
         public DbContextInstituto(DbContextOptions options) : base(options) // constructor contexto
         {
+            
 
         }
 
@@ -23,6 +26,7 @@ namespace InstitutoEducativo.Data
         public DbSet<Materia> Materias { get; set; }
         public DbSet<MateriaCursada> MateriaCursadas { get; set; }
         public DbSet<Profesor> Profesores { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
@@ -43,6 +47,9 @@ namespace InstitutoEducativo.Data
                 .HasForeignKey(ma => ma.MateriaCursadaId);
 
             #endregion
+            modelbuilder.Entity<IdentityUser<Guid>>().ToTable("Personas");
+            modelbuilder.Entity<IdentityRole<Guid>>().ToTable("Roles");
+            modelbuilder.Entity<IdentityUserRole<Guid>>().ToTable("PersonasRoles");
 
 
         }
