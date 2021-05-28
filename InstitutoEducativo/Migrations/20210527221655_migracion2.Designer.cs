@@ -4,20 +4,84 @@ using InstitutoEducativo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InstitutoEducativo.Migrations
 {
     [DbContext(typeof(DbContextInstituto))]
-    partial class DbContextInstitutoModelSnapshot : ModelSnapshot
+    [Migration("20210527221655_migracion2")]
+    partial class migracion2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("InstitutoEducativo.Models.Alumno", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Apellido")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<Guid>("CarreraId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Direccion")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Dni")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaAlta")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Legajo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<int>("NumeroMatricula")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarreraId");
+
+                    b.ToTable("Alumnos");
+                });
 
             modelBuilder.Entity("InstitutoEducativo.Models.AlumnoMateriaCursada", b =>
                 {
@@ -83,6 +147,57 @@ namespace InstitutoEducativo.Migrations
                     b.HasKey("CarreraId");
 
                     b.ToTable("Carreras");
+                });
+
+            modelBuilder.Entity("InstitutoEducativo.Models.Empleado", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Apellido")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Direccion")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Dni")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaAlta")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Legajo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Empleados");
                 });
 
             modelBuilder.Entity("InstitutoEducativo.Models.Materia", b =>
@@ -154,7 +269,7 @@ namespace InstitutoEducativo.Migrations
                     b.ToTable("MateriaCursadas");
                 });
 
-            modelBuilder.Entity("InstitutoEducativo.Models.Persona", b =>
+            modelBuilder.Entity("InstitutoEducativo.Models.Profesor", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -168,10 +283,6 @@ namespace InstitutoEducativo.Migrations
                     b.Property<string>("Direccion")
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Dni")
                         .IsRequired()
@@ -206,41 +317,16 @@ namespace InstitutoEducativo.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Personas");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Persona");
+                    b.ToTable("Profesores");
                 });
 
             modelBuilder.Entity("InstitutoEducativo.Models.Alumno", b =>
                 {
-                    b.HasBaseType("InstitutoEducativo.Models.Persona");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("CarreraId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("NumeroMatricula")
-                        .HasColumnType("int");
-
-                    b.HasIndex("CarreraId");
-
-                    b.HasDiscriminator().HasValue("Alumno");
-                });
-
-            modelBuilder.Entity("InstitutoEducativo.Models.Empleado", b =>
-                {
-                    b.HasBaseType("InstitutoEducativo.Models.Persona");
-
-                    b.HasDiscriminator().HasValue("Empleado");
-                });
-
-            modelBuilder.Entity("InstitutoEducativo.Models.Profesor", b =>
-                {
-                    b.HasBaseType("InstitutoEducativo.Models.Persona");
-
-                    b.HasDiscriminator().HasValue("Profesor");
+                    b.HasOne("InstitutoEducativo.Models.Carrera", "Carrera")
+                        .WithMany("Alumnos")
+                        .HasForeignKey("CarreraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("InstitutoEducativo.Models.AlumnoMateriaCursada", b =>
@@ -303,15 +389,6 @@ namespace InstitutoEducativo.Migrations
                     b.HasOne("InstitutoEducativo.Models.Profesor", "Profesor")
                         .WithMany("MateriasCursadasActivas")
                         .HasForeignKey("ProfesorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("InstitutoEducativo.Models.Alumno", b =>
-                {
-                    b.HasOne("InstitutoEducativo.Models.Carrera", "Carrera")
-                        .WithMany("Alumnos")
-                        .HasForeignKey("CarreraId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

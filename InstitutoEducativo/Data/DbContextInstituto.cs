@@ -14,6 +14,7 @@ namespace InstitutoEducativo.Data
 
         }
 
+        public DbSet<Persona> Personas { get; set; }
         public DbSet<Alumno> Alumnos { get; set; }
         public DbSet<AlumnoMateriaCursada> AlumnoMateriaCursadas { get; set; }
         public DbSet<Calificacion> Calificaciones { get; set; }
