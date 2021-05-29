@@ -26,11 +26,12 @@ namespace InstitutoEducativo.Data
         public DbSet<Materia> Materias { get; set; }
         public DbSet<MateriaCursada> MateriaCursadas { get; set; }
         public DbSet<Profesor> Profesores { get; set; }
-        public DbSet<Role> Roles { get; set; }
+        public DbSet<Rol> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
             base.OnModelCreating(modelbuilder);
+
             #region N:M Alumno MateriaCursada -> AlumnoMateriaCursada
 
             modelbuilder.Entity<AlumnoMateriaCursada>()
@@ -47,10 +48,12 @@ namespace InstitutoEducativo.Data
                 .HasForeignKey(ma => ma.MateriaCursadaId);
 
             #endregion
+
+            #region Model Builders
             modelbuilder.Entity<IdentityUser<Guid>>().ToTable("Personas");
             modelbuilder.Entity<IdentityRole<Guid>>().ToTable("Roles");
             modelbuilder.Entity<IdentityUserRole<Guid>>().ToTable("PersonasRoles");
-
+            #endregion
 
         }
     }

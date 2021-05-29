@@ -7,16 +7,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace InstitutoEducativo.Controllers
 {
     public class AlumnosController : Controller
     {
         private readonly DbContextInstituto _context;
+        private readonly UserManager<Persona> _userManager;
+        private readonly SignInManager<Persona> _signInManager;
 
-        public AlumnosController(DbContextInstituto context)
+        public AlumnosController(DbContextInstituto context, UserManager<Persona> userManager, SignInManager<Persona> signInManager)
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         // GET: Alumnos
@@ -25,6 +30,18 @@ namespace InstitutoEducativo.Controllers
             var dbContextInstituto = _context.Alumnos.Include(a => a.Carrera);
             return View(await dbContextInstituto.ToListAsync());
         }
+
+        //public IActionResult Autoregistrar()
+        //{
+        //    return View();
+        //}
+
+        //public async Task<IActionResult> AutoRegistrar()
+        //{
+
+        //}
+
+
 
         // GET: Alumnos/Details/5
         public async Task<IActionResult> Details(Guid? id)
@@ -57,7 +74,7 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Activo,NumeroMatricula,CarreraId,Id,UserName,Password,FechaAlta,Nombre,Apellido,Dni,Email,Telefono,Direccion,Legajo")] Alumno alumno)
+        public async Task<IActionResult> Create([Bind("Activo,NumeroMatricula,CarreraId,FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Alumno alumno)
         {
             if (ModelState.IsValid)
             {
@@ -92,7 +109,7 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Activo,NumeroMatricula,CarreraId,Id,UserName,Password,FechaAlta,Nombre,Apellido,Dni,Email,Telefono,Direccion,Legajo")] Alumno alumno)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Activo,NumeroMatricula,CarreraId,FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Alumno alumno)
         {
             if (id != alumno.Id)
             {

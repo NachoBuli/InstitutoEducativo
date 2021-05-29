@@ -7,25 +7,30 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace InstitutoEducativo.Controllers
 {
-    public class ProfesoresController : Controller
+    public class ProfesionalesController : Controller
     {
         private readonly DbContextInstituto _context;
+        private readonly UserManager<Persona> _userManager;
+        private readonly SignInManager<Persona> _signInManager;
 
-        public ProfesoresController(DbContextInstituto context)
+        public ProfesionalesController(DbContextInstituto context, UserManager<Persona> userManager, SignInManager<Persona> signInManager)
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        // GET: Profesores
+        // GET: Profesionales
         public async Task<IActionResult> Index()
         {
             return View(await _context.Profesores.ToListAsync());
         }
 
-        // GET: Profesores/Details/5
+        // GET: Profesionales/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -43,18 +48,18 @@ namespace InstitutoEducativo.Controllers
             return View(profesor);
         }
 
-        // GET: Profesores/Create
+        // GET: Profesionales/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Profesores/Create
+        // POST: Profesionales/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserName,Password,FechaAlta,Nombre,Apellido,Dni,Email,Telefono,Direccion,Legajo")] Profesor profesor)
+        public async Task<IActionResult> Create([Bind("FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Profesor profesor)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +71,7 @@ namespace InstitutoEducativo.Controllers
             return View(profesor);
         }
 
-        // GET: Profesores/Edit/5
+        // GET: Profesionales/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -82,12 +87,12 @@ namespace InstitutoEducativo.Controllers
             return View(profesor);
         }
 
-        // POST: Profesores/Edit/5
+        // POST: Profesionales/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,UserName,Password,FechaAlta,Nombre,Apellido,Dni,Email,Telefono,Direccion,Legajo")] Profesor profesor)
+        public async Task<IActionResult> Edit(Guid id, [Bind("FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Profesor profesor)
         {
             if (id != profesor.Id)
             {
@@ -117,7 +122,7 @@ namespace InstitutoEducativo.Controllers
             return View(profesor);
         }
 
-        // GET: Profesores/Delete/5
+        // GET: Profesionales/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -135,7 +140,7 @@ namespace InstitutoEducativo.Controllers
             return View(profesor);
         }
 
-        // POST: Profesores/Delete/5
+        // POST: Profesionales/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
