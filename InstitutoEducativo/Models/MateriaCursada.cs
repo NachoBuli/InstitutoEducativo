@@ -13,16 +13,16 @@ namespace InstitutoEducativo.Models
 	{
 		public Guid MateriaCursadaId { get; set; }
 
-		[Required(ErrorMessage = Validaciones._required)]
-		[MaxLength(100, ErrorMessage = Validaciones._maxLength)]
+		[Required(ErrorMessage = Validaciones.Required)]
+		[MaxLength(100, ErrorMessage = Validaciones.MaxLength)]
 		public string Nombre { get; set; }
-		
-		[Required(ErrorMessage = Validaciones._required)]
-		[Range(1, 6, ErrorMessage = "Ingresa un numero mayor a 1 y menor a 6")]
+
+		[Required(ErrorMessage = Validaciones.Required)]
+		[Range(1, 6, ErrorMessage = Validaciones.NumeroMayorMenorA)]
 		public int Anio { get; set; }
 
-		[Required(ErrorMessage = Validaciones._required)]
-		[Range(1, 2, ErrorMessage = "Ingresa un numero mayor a 1 y menor a 2")]
+		[Required(ErrorMessage = Validaciones.Required)]
+		[Range(1, 2, ErrorMessage = Validaciones.NumeroMayorMenorA)]
 		public int Cuatrimestre { get; set; }
 
 		public bool Activo { get; set; }
