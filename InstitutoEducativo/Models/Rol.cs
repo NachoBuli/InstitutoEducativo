@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace InstitutoEducativo.Models
 {
-    public class Role : IdentityRole<Guid>
+    public class Rol : IdentityRole<Guid>
     {
         //[Display(Name="nombreRole")]
         //public override string Name { get; set; }
