@@ -11,13 +11,13 @@ using Microsoft.AspNetCore.Identity;
 
 namespace InstitutoEducativo.Controllers
 {
-    public class ProfesionalesController : Controller
+    public class ProfesoresController : Controller
     {
         private readonly DbContextInstituto _context;
         private readonly UserManager<Persona> _userManager;
         private readonly SignInManager<Persona> _signInManager;
 
-        public ProfesionalesController(DbContextInstituto context, UserManager<Persona> userManager, SignInManager<Persona> signInManager)
+        public ProfesoresController(DbContextInstituto context, UserManager<Persona> userManager, SignInManager<Persona> signInManager)
         {
             _context = context;
             _userManager = userManager;
