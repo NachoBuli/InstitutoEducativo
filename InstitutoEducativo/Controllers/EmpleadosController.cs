@@ -11,26 +11,26 @@ using Microsoft.AspNetCore.Identity;
 
 namespace InstitutoEducativo.Controllers
 {
-    public class ProfesionalesController : Controller
+    public class EmpleadosController : Controller
     {
         private readonly DbContextInstituto _context;
         private readonly UserManager<Persona> _userManager;
         private readonly SignInManager<Persona> _signInManager;
 
-        public ProfesionalesController(DbContextInstituto context, UserManager<Persona> userManager, SignInManager<Persona> signInManager)
+        public EmpleadosController(DbContextInstituto context, UserManager<Persona> userManager, SignInManager<Persona> signInManager)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
         }
 
-        // GET: Profesionales
+        // GET: Empleados
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Profesores.ToListAsync());
+            return View(await _context.Empleados.ToListAsync());
         }
 
-        // GET: Profesionales/Details/5
+        // GET: Empleados/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -38,40 +38,41 @@ namespace InstitutoEducativo.Controllers
                 return NotFound();
             }
 
-            var profesor = await _context.Profesores
+            var empleado = await _context.Empleados
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (profesor == null)
+            if (empleado == null)
             {
                 return NotFound();
             }
 
-            return View(profesor);
+            return View(empleado);
         }
 
-        // GET: Profesionales/Create
+        // GET: Empleados/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Profesionales/Create
+        // POST: Empleados/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Profesor profesor)
+        public async Task<IActionResult> Create([Bind("FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Empleado empleado)
         {
             if (ModelState.IsValid)
             {
-                profesor.Id = Guid.NewGuid();
-                _context.Add(profesor);
+                empleado.Id = Guid.NewGuid();
+                empleado.FechaAlta = DateTime.Today;
+                _context.Add(empleado);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(profesor);
+            return View(empleado);
         }
 
-        // GET: Profesionales/Edit/5
+        // GET: Empleados/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -79,22 +80,22 @@ namespace InstitutoEducativo.Controllers
                 return NotFound();
             }
 
-            var profesor = await _context.Profesores.FindAsync(id);
-            if (profesor == null)
+            var empleado = await _context.Empleados.FindAsync(id);
+            if (empleado == null)
             {
                 return NotFound();
             }
-            return View(profesor);
+            return View(empleado);
         }
 
-        // POST: Profesionales/Edit/5
+        // POST: Empleados/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Profesor profesor)
+        public async Task<IActionResult> Edit(Guid id, [Bind("FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Empleado empleado)
         {
-            if (id != profesor.Id)
+            if (id != empleado.Id)
             {
                 return NotFound();
             }
@@ -103,12 +104,12 @@ namespace InstitutoEducativo.Controllers
             {
                 try
                 {
-                    _context.Update(profesor);
+                    _context.Update(empleado);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProfesorExists(profesor.Id))
+                    if (!EmpleadoExists(empleado.Id))
                     {
                         return NotFound();
                     }
@@ -119,10 +120,10 @@ namespace InstitutoEducativo.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(profesor);
+            return View(empleado);
         }
 
-        // GET: Profesionales/Delete/5
+        // GET: Empleados/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -130,30 +131,30 @@ namespace InstitutoEducativo.Controllers
                 return NotFound();
             }
 
-            var profesor = await _context.Profesores
+            var empleado = await _context.Empleados
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (profesor == null)
+            if (empleado == null)
             {
                 return NotFound();
             }
 
-            return View(profesor);
+            return View(empleado);
         }
 
-        // POST: Profesionales/Delete/5
+        // POST: Empleados/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var profesor = await _context.Profesores.FindAsync(id);
-            _context.Profesores.Remove(profesor);
+            var empleado = await _context.Empleados.FindAsync(id);
+            _context.Empleados.Remove(empleado);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProfesorExists(Guid id)
+        private bool EmpleadoExists(Guid id)
         {
-            return _context.Profesores.Any(e => e.Id == id);
+            return _context.Empleados.Any(e => e.Id == id);
         }
     }
 }

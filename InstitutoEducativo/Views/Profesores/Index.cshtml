@@ -1,20 +1,17 @@
-﻿@model IEnumerable<InstitutoEducativo.Models.Alumno>
+﻿@model IEnumerable<InstitutoEducativo.Models.Profesor>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Alumnos</h1>
+<h1>Profesor</h1>
 
 <p>
-    <a asp-action="Create">Crear nuevo</a>
+    <a asp-action="Create">Crear Nuevo</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Activo)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
@@ -22,13 +19,13 @@
                 @Html.DisplayNameFor(model => model.Apellido)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Carrera)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
+                @Html.DisplayNameFor(model => model.Telefono)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Legajo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
             </th>
             <th></th>
         </tr>
@@ -36,15 +33,6 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Activo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumeroMatricula)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Carrera.Nombre)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FechaAlta)
             </td>
