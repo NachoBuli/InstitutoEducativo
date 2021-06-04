@@ -109,9 +109,9 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Activo,NumeroMatricula,CarreraId,FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Alumno aluEnFormulario)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Activo,NumeroMatricula,CarreraId,FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Alumno alumno)
         {
-            if (id != aluEnFormulario.Id)
+            if (id != alumno.Id)
             {
                 return NotFound();
             }
@@ -120,21 +120,12 @@ namespace InstitutoEducativo.Controllers
             {
                 try
                 {
-                    var aluEnDb = _context.Alumnos.Find(id);
-                    if(aluEnDb != null)
-                    {
-                        //Él alumno existe
-                        aluEnDb.Apellido = aluEnFormulario.Apellido;
-                        //modif tod o lo demas
-                        //actualizo.
-                    }
-
-                    _context.Update(aluEnFormulario);
+                    _context.Update(alumno);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AlumnoExists(aluEnFormulario.Id))
+                    if (!AlumnoExists(alumno.Id))
                     {
                         return NotFound();
                     }
@@ -145,8 +136,8 @@ namespace InstitutoEducativo.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarreraId"] = new SelectList(_context.Carreras, "CarreraId", "Nombre", aluEnFormulario.CarreraId);
-            return View(aluEnFormulario);
+            ViewData["CarreraId"] = new SelectList(_context.Carreras, "CarreraId", "Nombre", alumno.CarreraId);
+            return View(alumno);
         }
 
         // GET: Alumnos/Delete/5

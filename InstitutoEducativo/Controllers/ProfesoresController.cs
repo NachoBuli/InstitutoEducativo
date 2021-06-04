@@ -7,16 +7,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace InstitutoEducativo.Controllers
 {
     public class ProfesoresController : Controller
     {
         private readonly DbContextInstituto _context;
+        private readonly UserManager<Persona> _userManager;
+        private readonly SignInManager<Persona> _signInManager;
 
-        public ProfesoresController(DbContextInstituto context)
+        public ProfesoresController(DbContextInstituto context, UserManager<Persona> userManager, SignInManager<Persona> signInManager)
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         // GET: Profesores
@@ -54,11 +59,12 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserName,Password,FechaAlta,Nombre,Apellido,Dni,Email,Telefono,Direccion,Legajo")] Profesor profesor)
+        public async Task<IActionResult> Create([Bind("FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Profesor profesor)
         {
             if (ModelState.IsValid)
             {
                 profesor.Id = Guid.NewGuid();
+                profesor.FechaAlta = DateTime.Today;
                 _context.Add(profesor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -87,7 +93,7 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,UserName,Password,FechaAlta,Nombre,Apellido,Dni,Email,Telefono,Direccion,Legajo")] Profesor profesor)
+        public async Task<IActionResult> Edit(Guid id, [Bind("FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Profesor profesor)
         {
             if (id != profesor.Id)
             {

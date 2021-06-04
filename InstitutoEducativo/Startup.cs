@@ -1,7 +1,9 @@
 using InstitutoEducativo.Data;
+using InstitutoEducativo.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,11 +36,8 @@ namespace InstitutoEducativo
             {
                 services.AddDbContext<DbContextInstituto>(options => options.UseSqlServer(Configuration.GetConnectionString("InstitutoEducativoCS")));
             }
-            
-            
-            
-            
- 
+            //Creo tabla intermedia entre Persona y Rol
+            services.AddIdentity<Persona,Rol>().AddEntityFrameworkStores<DbContextInstituto>();
 
             services.AddControllersWithViews();
         }
