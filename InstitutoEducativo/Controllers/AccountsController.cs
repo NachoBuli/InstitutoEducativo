@@ -66,7 +66,7 @@ namespace InstitutoEducativo.Controllers
                     Telefono = modelo.Telefono,
                     Dni = modelo.Dni,
                     Apellido = modelo.Apellido,
-                    Legajo = (LegajoMax + 1).ToString(),
+                    Legajo = "A-" + ( + LegajoMax + 1).ToString(),
                     FechaAlta = DateTime.Now,
                     Activo = false
                     
