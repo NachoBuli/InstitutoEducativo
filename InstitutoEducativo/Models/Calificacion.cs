@@ -12,18 +12,18 @@ namespace InstitutoEducativo.Models
 	{
 		public Guid CalificacionId { get; set; }
 
-		[Required(ErrorMessage = Validaciones._required)]
+		[Required(ErrorMessage = Validaciones.Required)]
 		public int NotaFinal { get; set; }
 
         public AlumnoMateriaCursada AlumnoMateriaCursada { get; set; }
 
 
-        [Required(ErrorMessage = Validaciones._required)]
+        [Required(ErrorMessage = Validaciones.Required)]
 		public Materia Materia { get; set; }
 
         
 
-        [Required(ErrorMessage = Validaciones._required)]
+        [Required(ErrorMessage = Validaciones.Required)]
 		public MateriaCursada MateriaCursada { get {
 				return AlumnoMateriaCursada.MateriaCursada;
 			}
@@ -33,7 +33,7 @@ namespace InstitutoEducativo.Models
         public Guid ProfesorId { get; set; }
         public Profesor Profesor { get; set; }
 
-		[Required(ErrorMessage = Validaciones._required)]
+		[Required(ErrorMessage = Validaciones.Required)]
 		public Alumno Alumno { get {
 				return AlumnoMateriaCursada.Alumno;
 			}

@@ -13,8 +13,8 @@ namespace InstitutoEducativo.Models
 		[Key]
 		public Guid CarreraId { get; set; }
 
-		[Required(ErrorMessage = Validaciones._required)]
-		[MaxLength(50, ErrorMessage = Validaciones._maxLength)]
+		[Required(ErrorMessage = Validaciones.Required)]
+		[MaxLength(50, ErrorMessage = Validaciones.MaxLength)]
 		public string Nombre { get; set; }
 
 		public ICollection<Materia> Materias { get; set; }

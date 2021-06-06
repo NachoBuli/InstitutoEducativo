@@ -37,7 +37,10 @@ namespace InstitutoEducativo
                 services.AddDbContext<DbContextInstituto>(options => options.UseSqlServer(Configuration.GetConnectionString("InstitutoEducativoCS")));
             }
             //Creo tabla intermedia entre Persona y Rol
+
             services.AddIdentity<Persona,Rol>().AddEntityFrameworkStores<DbContextInstituto>();
+
+            services.Configure<IdentityOptions>(options => options.Password.RequireNonAlphanumeric = false);
 
             services.AddControllersWithViews();
         }

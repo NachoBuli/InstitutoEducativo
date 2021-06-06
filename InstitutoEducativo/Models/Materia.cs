@@ -14,19 +14,19 @@ namespace InstitutoEducativo.Models
 		[Key]
 		public Guid MateriaId { get; set; }
 
-		[Required(ErrorMessage = Validaciones._required)]
-		[MaxLength(100, ErrorMessage = Validaciones._maxLength)]
+		[Required(ErrorMessage = Validaciones.Required)]
+		[MaxLength(100, ErrorMessage = Validaciones.MaxLength)]
 		public string Nombre { get; set; }
 
-		[Required(ErrorMessage = Validaciones._required)]
-		[MaxLength(6, ErrorMessage = Validaciones._maxLength)]
+		[Required(ErrorMessage = Validaciones.Required)]
+		[MaxLength(6, ErrorMessage = Validaciones.MaxLength)]
 		public string CodigoMateria { get; set; }
 
-        [Required(ErrorMessage = Validaciones._required)]
-		[MaxLength(150, ErrorMessage = Validaciones._maxLength)]
+        [Required(ErrorMessage = Validaciones.Required)]
+		[MaxLength(150, ErrorMessage = Validaciones.MaxLength)]
 		public string Descripcion { get; set; }
 
-		[Required(ErrorMessage = Validaciones._required)]
+		[Required(ErrorMessage = Validaciones.Required)]
 		[Range(0, 1000, ErrorMessage = "Ingresa un numero mayor a cero y menor a 1000")]
 		public int CupoMaximo { get; set; }
 
