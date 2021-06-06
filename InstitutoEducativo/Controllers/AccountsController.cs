@@ -4,6 +4,7 @@ using InstitutoEducativo.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace InstitutoEducativo.Controllers
         [HttpGet]
         public IActionResult Registrar()
         {
+            ViewData["CarreraId"] = new SelectList(_miContexto.Carreras, "CarreraId", "Nombre");
             return View();
         }
 
@@ -39,10 +41,36 @@ namespace InstitutoEducativo.Controllers
         {
             if (ModelState.IsValid)
             {
-               Persona persona = new Alumno()
+                var Alumnos = _miContexto.Alumnos;
+                var LegajoMax = 0;
+
+                foreach (Alumno alumno in Alumnos)
+                {
+                    if(alumno.Legajo != null)
+                    {
+                        var ParseLegajo = int.Parse(alumno.Legajo);
+                        if (ParseLegajo > LegajoMax)
+                        {
+                            LegajoMax = ParseLegajo;
+                        }
+                    }
+                 
+                }
+
+                Persona persona = new Alumno()
                 {
                     UserName = modelo.Email,
-                    Email = modelo.Email
+                    Email = modelo.Email,
+                    CarreraId = modelo.CarreraId,
+                    Direccion = modelo.Direccion,
+                    Telefono = modelo.Telefono,
+                    Dni = modelo.Dni,
+                    Apellido = modelo.Apellido,
+                    Legajo = (LegajoMax + 1).ToString(),
+                    FechaAlta = DateTime.Now,
+                    Activo = false
+                    
+
                 };
 
                 var resultadoRegistracion = await _userManager.CreateAsync(persona, modelo.Contrasena);
@@ -66,15 +94,16 @@ namespace InstitutoEducativo.Controllers
         public async Task<IActionResult> EmailLibre(string email)
         {
             var usuarioExistente = await _userManager.FindByEmailAsync(email);
+            
 
             if (usuarioExistente == null)
             {
-                //No hay un usuario existente con ese email
+              
                 return Json(true);
             }
             else
             {
-                //El mail ya está en uso
+            
                 return Json($"El correo {email} ya está en uso.");
             }
             //Utilizo JSON, Jquery Validate method, espera una respuesta de este tipo.

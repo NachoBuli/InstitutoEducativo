@@ -9,11 +9,11 @@ namespace InstitutoEducativo.ViewModels
 {
     public class Login
     {
-        [Required(ErrorMessage = Validaciones._required)]
-        [EmailAddress(ErrorMessage = Validaciones._required)]
+        [Required(ErrorMessage = Validaciones.Required)]
+        [EmailAddress(ErrorMessage = Validaciones.Required)]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = Validaciones.Required)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

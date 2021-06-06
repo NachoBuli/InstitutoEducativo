@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InstitutoEducativo.ViewModels;
 
 namespace InstitutoEducativo.Data
 {
@@ -56,6 +57,8 @@ namespace InstitutoEducativo.Data
             #endregion
 
         }
+
+        public DbSet<InstitutoEducativo.ViewModels.RegistroUsuario> RegistroUsuario { get; set; }
     }
 
 }
