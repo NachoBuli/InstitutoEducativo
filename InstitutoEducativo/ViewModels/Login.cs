@@ -9,6 +9,8 @@ namespace InstitutoEducativo.ViewModels
 {
     public class Login
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = Validaciones.Required)]
         [EmailAddress(ErrorMessage = Validaciones.Required)]
         public string Email { get; set; }

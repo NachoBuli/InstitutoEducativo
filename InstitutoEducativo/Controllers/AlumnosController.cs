@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InstitutoEducativo.Controllers
 {
@@ -16,6 +17,7 @@ namespace InstitutoEducativo.Controllers
         private readonly DbContextInstituto _context;
         private readonly UserManager<Persona> _userManager;
         private readonly SignInManager<Persona> _signInManager;
+      
 
         public AlumnosController(DbContextInstituto context, UserManager<Persona> userManager, SignInManager<Persona> signInManager)
         {
@@ -63,6 +65,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Alumnos/Create
+        //[Authorize (Roles = "Empleado")]
         public IActionResult Create()
         {
             ViewData["CarreraId"] = new SelectList(_context.Carreras, "CarreraId", "Nombre");
@@ -83,6 +86,10 @@ namespace InstitutoEducativo.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            
+
+
+
             ViewData["CarreraId"] = new SelectList(_context.Carreras, "CarreraId", "Nombre", alumno.CarreraId);
             return View(alumno);
         }
@@ -141,6 +148,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Alumnos/Delete/5
+        [Authorize (Roles = "Alumno")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
