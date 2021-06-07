@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InstitutoEducativo.Controllers
 {
@@ -25,6 +26,7 @@ namespace InstitutoEducativo.Controllers
             var dbContextInstituto = _context.Calificaciones.Include(c => c.Profesor);
             return View(await dbContextInstituto.ToListAsync());
         }
+        [Authorize(Roles = "Alumno")]
 
         // GET: Calificaciones/Details/5
         public async Task<IActionResult> Details(Guid? id)
@@ -69,7 +71,6 @@ namespace InstitutoEducativo.Controllers
             ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Apellido", calificacion.ProfesorId);
             return View(calificacion);
         }
-
         // GET: Calificaciones/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {

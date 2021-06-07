@@ -1,5 +1,6 @@
 using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -41,7 +42,13 @@ namespace InstitutoEducativo
             services.AddIdentity<Persona,Rol>().AddEntityFrameworkStores<DbContextInstituto>();
 
             services.Configure<IdentityOptions>(options => options.Password.RequireNonAlphanumeric = false);
-
+            
+            services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme,
+                opciones =>
+                {
+                    opciones.LoginPath = "/Accounts/IniciarSesion";
+                    opciones.AccessDeniedPath = "/Accounts/AccesoDenegado";
+                });
             services.AddControllersWithViews();
         }
 
@@ -72,6 +79,10 @@ namespace InstitutoEducativo
 
             app.UseRouting();
 
+            //orden es importante
+            //Quien es??
+            app.UseAuthentication();
+            //Tiene permiso??
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
