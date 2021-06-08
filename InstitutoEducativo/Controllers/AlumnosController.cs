@@ -17,13 +17,14 @@ namespace InstitutoEducativo.Controllers
         private readonly DbContextInstituto _context;
         private readonly UserManager<Persona> _userManager;
         private readonly SignInManager<Persona> _signInManager;
-      
+        private readonly RoleManager<Rol> _RoleManager;      
 
-        public AlumnosController(DbContextInstituto context, UserManager<Persona> userManager, SignInManager<Persona> signInManager)
+        public AlumnosController(DbContextInstituto context, UserManager<Persona> userManager, SignInManager<Persona> signInManager, RoleManager<Rol> roleManager)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _RoleManager = roleManager;
         }
 
         // GET: Alumnos
@@ -72,29 +73,27 @@ namespace InstitutoEducativo.Controllers
             return View();
         }
 
-        // POST: Alumnos/Create
+        //POST: Alumnos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Activo,NumeroMatricula,CarreraId,FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Alumno alumno)
+       [HttpPost]
+       [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Activo,NumeroMatricula,FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Alumno alumno)
         {
+
             if (ModelState.IsValid)
             {
                 alumno.Id = Guid.NewGuid();
+                alumno.FechaAlta = DateTime.Today;
                 _context.Add(alumno);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            
-
-
-
             ViewData["CarreraId"] = new SelectList(_context.Carreras, "CarreraId", "Nombre", alumno.CarreraId);
             return View(alumno);
         }
 
-        // GET: Alumnos/Edit/5
+        //GET: Alumnos/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)

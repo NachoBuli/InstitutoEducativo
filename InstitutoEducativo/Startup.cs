@@ -50,6 +50,8 @@ namespace InstitutoEducativo
                     opciones.AccessDeniedPath = "/Accounts/AccesoDenegado";
                 });
             services.AddControllersWithViews();
+
+            services.AddScoped<IDbInicializador, DbInicializador>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,10 +69,17 @@ namespace InstitutoEducativo
             }
 
 
-            if (!Configuration.GetValue<bool>("DbInMem"))
+           
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
-                miContexto.Database.Migrate();// --> asegura la base de datos y ejecuta todas las migraciones
-            }
+
+                var contexto = serviceScope.ServiceProvider.GetRequiredService<DbContextInstituto>();
+                if (!Configuration.GetValue<bool>("DbInMem"))
+                {
+                    miContexto.Database.Migrate();// --> asegura la base de datos y ejecuta todas las migraciones
+                }
+                serviceScope.ServiceProvider.GetService<IDbInicializador>().Seed();
+            } 
             
             
     

@@ -64,6 +64,7 @@ namespace InstitutoEducativo.Controllers
 
                 Persona persona = new Alumno()
                 {
+                    Id = new Guid(),
                     UserName = modelo.Email,
                     Email = modelo.Email,
                     CarreraId = modelo.CarreraId,
@@ -71,7 +72,7 @@ namespace InstitutoEducativo.Controllers
                     Telefono = modelo.Telefono,
                     Dni = modelo.Dni,
                     Apellido = modelo.Apellido,
-                    Legajo = (LegajoMax + 1).ToString(),
+                    Legajo = "1" + (LegajoMax + 1).ToString(),
                     FechaAlta = DateTime.Now,
                     Activo = false
                     
