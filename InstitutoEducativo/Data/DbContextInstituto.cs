@@ -57,10 +57,6 @@ namespace InstitutoEducativo.Data
             #endregion
 
         }
-
-        public DbSet<InstitutoEducativo.ViewModels.RegistroUsuario> RegistroUsuario { get; set; }
-
-        public DbSet<InstitutoEducativo.ViewModels.Login> Login { get; set; }
     }
 
 }

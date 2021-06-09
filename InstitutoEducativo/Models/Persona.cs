@@ -18,9 +18,10 @@ namespace InstitutoEducativo.Models
         //[MaxLength(50, ErrorMessage = Validaciones.MaxLength)]
         //public string UserName { get; set; }
 
-        //[Required(ErrorMessage = Validaciones.Required)]
-        //[DataType(DataType.Password)]
-        //public string Password { get; set; }
+        [Required(ErrorMessage = Validaciones.Required)]
+        [DataType(DataType.Password)]
+        [Display(Name ="Contraseña")]
+        public override string PasswordHash { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]

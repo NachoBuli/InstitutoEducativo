@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210609182229_ModificacionesEnModelos.cs" />
+    <Compile Remove="Migrations\20210609182229_ModificacionesEnModelos.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.15" />

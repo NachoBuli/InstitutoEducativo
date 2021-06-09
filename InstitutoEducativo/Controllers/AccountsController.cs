@@ -47,6 +47,7 @@ namespace InstitutoEducativo.Controllers
             {
                 var Alumnos = _miContexto.Alumnos;
                 var LegajoMax = 0;
+                var MatriculaMax = 0;
 
                 foreach (Alumno alumno in Alumnos)
                 {
@@ -58,6 +59,15 @@ namespace InstitutoEducativo.Controllers
                         {
                             LegajoMax = ParseLegajo;
                         }
+
+                        if (alumno.NumeroMatricula != 0)
+                        {
+                            var MatriculaAlumno = alumno.NumeroMatricula;
+                            if (MatriculaAlumno > MatriculaMax)
+                            {
+                                MatriculaMax = MatriculaAlumno;
+                            }
+                        }
                     }
                  
                 }
@@ -65,6 +75,7 @@ namespace InstitutoEducativo.Controllers
                 Persona persona = new Alumno()
                 {
                     Id = new Guid(),
+                    Nombre = modelo.Nombre,
                     UserName = modelo.Email,
                     Email = modelo.Email,
                     CarreraId = modelo.CarreraId,
@@ -74,7 +85,8 @@ namespace InstitutoEducativo.Controllers
                     Apellido = modelo.Apellido,
                     Legajo = "1" + (LegajoMax + 1).ToString(),
                     FechaAlta = DateTime.Now,
-                    Activo = false
+                    Activo = false,
+                    NumeroMatricula = MatriculaMax++
                     
                 };
 
@@ -93,7 +105,7 @@ namespace InstitutoEducativo.Controllers
                         var resuNewRol = await _roleManager.CreateAsync(rolAlumno);
                     }
 
-                    var resuAddToRole = await _userManager.CreateAsync(persona, Name);
+                    var resuAddToRole = await _userManager.AddToRoleAsync(persona, Name);
                     await _signInManager.SignInAsync(persona, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
