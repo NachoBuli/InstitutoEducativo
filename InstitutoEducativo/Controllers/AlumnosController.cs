@@ -213,5 +213,13 @@ namespace InstitutoEducativo.Controllers
 
             return View(materias);
         }
+
+        public async Task<IActionResult> VerMateriasCursadas()
+        {
+            Alumno alumno = (Alumno)await _userManager.GetUserAsync(HttpContext.User);
+            var materiasCursadas = alumno.AlumnosMateriasCursadas;
+
+            return View(materiasCursadas);
+        }
     }
 }
