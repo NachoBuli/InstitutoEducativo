@@ -52,6 +52,26 @@ namespace InstitutoEducativo.Controllers
             return View(profesor);
         }
 
+        public async Task<IActionResult> ListarMateriasCursadas()
+        {
+            //Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);/*Buscar profe logeado*/
+            Profesor profesor = new Profesor();
+            var materiaCursadas = _context.MateriaCursadas
+                .Where(m => m.ProfesorId == profesor.Id);
+
+
+            return View(materiaCursadas);
+        }
+        public async Task<IActionResult> MostrarAlumnos(Guid materiaCursadaId)
+        {
+            var materiaCursada = _context.MateriaCursadas.Find(materiaCursadaId);
+            var alumnoMateriaCursadas = materiaCursada.AlumnoMateriaCursadas;
+            ViewData["ListaAlumnos"] = alumnoMateriaCursadas;
+
+            return View();
+        }
+
+
         // GET: Profesores/Create
         public IActionResult Create()
         {
