@@ -14,6 +14,8 @@ namespace InstitutoEducativo.Models
 
 
 		public bool Activo { get; set; } // supongo que no resistriciones seran necesarios
+
+		[Required (ErrorMessage = Validaciones.Required)]
 		public int NumeroMatricula { get; set; }
 		public List<AlumnoMateriaCursada> AlumnosMateriasCursadas {get;set;}
 		

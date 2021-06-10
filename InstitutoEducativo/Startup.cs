@@ -1,5 +1,6 @@
 using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,9 +38,20 @@ namespace InstitutoEducativo
                 services.AddDbContext<DbContextInstituto>(options => options.UseSqlServer(Configuration.GetConnectionString("InstitutoEducativoCS")));
             }
             //Creo tabla intermedia entre Persona y Rol
+
             services.AddIdentity<Persona,Rol>().AddEntityFrameworkStores<DbContextInstituto>();
 
+            services.Configure<IdentityOptions>(options => options.Password.RequireNonAlphanumeric = false);
+            
+            services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme,
+                opciones =>
+                {
+                    opciones.LoginPath = "/Accounts/IniciarSesion";
+                    opciones.AccessDeniedPath = "/Accounts/AccesoDenegado";
+                });
             services.AddControllersWithViews();
+
+            services.AddScoped<IDbInicializador, DbInicializador>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,10 +69,17 @@ namespace InstitutoEducativo
             }
 
 
-            if (!Configuration.GetValue<bool>("DbInMem"))
+           
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
-                miContexto.Database.Migrate();// --> asegura la base de datos y ejecuta todas las migraciones
-            }
+
+                var contexto = serviceScope.ServiceProvider.GetRequiredService<DbContextInstituto>();
+                if (!Configuration.GetValue<bool>("DbInMem"))
+                {
+                    miContexto.Database.Migrate();// --> asegura la base de datos y ejecuta todas las migraciones
+                }
+                serviceScope.ServiceProvider.GetService<IDbInicializador>().Seed();
+            } 
             
             
     
@@ -69,6 +88,10 @@ namespace InstitutoEducativo
 
             app.UseRouting();
 
+            //orden es importante
+            //Quien es??
+            app.UseAuthentication();
+            //Tiene permiso??
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

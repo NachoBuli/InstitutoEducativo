@@ -14,13 +14,14 @@ namespace InstitutoEducativo.Models
         //[Key]
         //public Guid Id { get; set; }
 
-        //[Required(ErrorMessage = Validaciones._required)]
-        //[MaxLength(50, ErrorMessage = Validaciones._maxLength)]
+        //[Required(ErrorMessage = Validaciones.Required)]
+        //[MaxLength(50, ErrorMessage = Validaciones.MaxLength)]
         //public string UserName { get; set; }
 
-        //[Required(ErrorMessage = Validaciones._required)]
-        //[DataType(DataType.Password)]
-        //public string Password { get; set; }
+        [Required(ErrorMessage = Validaciones.Required)]
+        [DataType(DataType.Password)]
+        [Display(Name ="Contraseña")]
+        public override string PasswordHash { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
@@ -38,7 +39,7 @@ namespace InstitutoEducativo.Models
         [RegularExpression(@"[0-9]{8}", ErrorMessage = "Ingresá tu DNI sin puntos. Ej.: 12345678")]
         public string Dni { get; set; }
 
-        //[Required(ErrorMessage = Validaciones._required)]
+        //[Required(ErrorMessage = Validaciones.Required)]
         //[EmailAddress(ErrorMessage = "Ingresá una dirección de correo electrónico válida")]
         //public string Email { get; set; }
 

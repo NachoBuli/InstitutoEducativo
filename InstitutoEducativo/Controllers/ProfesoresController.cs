@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InstitutoEducativo.Controllers
 {
@@ -16,12 +17,15 @@ namespace InstitutoEducativo.Controllers
         private readonly DbContextInstituto _context;
         private readonly UserManager<Persona> _userManager;
         private readonly SignInManager<Persona> _signInManager;
+        private readonly RoleManager<Rol> _rolManager;
 
-        public ProfesoresController(DbContextInstituto context, UserManager<Persona> userManager, SignInManager<Persona> signInManager)
+        public ProfesoresController(DbContextInstituto context, UserManager<Persona> userManager, SignInManager<Persona> signInManager, RoleManager<Rol> rolManager)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _rolManager = rolManager;
+
         }
 
         // GET: Profesores
@@ -59,18 +63,35 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[Authorize(Roles =("Empleado"))]
         public async Task<IActionResult> Create([Bind("FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Profesor profesor)
         {
             if (ModelState.IsValid)
             {
                 profesor.Id = Guid.NewGuid();
                 profesor.FechaAlta = DateTime.Today;
-                _context.Add(profesor);
-                await _context.SaveChangesAsync();
+                profesor.UserName = profesor.Email;
+                var resultado = await _userManager.CreateAsync(profesor, profesor.PasswordHash);
+                if (resultado.Succeeded)
+                {
+                    Rol rolProfesor = null;
+                    var name = "Profesor";
+                    rolProfesor = await _rolManager.FindByNameAsync(name);
+
+                    if (rolProfesor == null)
+                    {
+                        rolProfesor = new Rol();
+                        rolProfesor.Name = name;
+                        var resultNewRol = await _rolManager.CreateAsync(rolProfesor);
+                    }
+
+                    var resultAddToRol = await _userManager.AddToRoleAsync(profesor, name);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(profesor);
         }
+    
 
         // GET: Profesores/Edit/5
         public async Task<IActionResult> Edit(Guid? id)

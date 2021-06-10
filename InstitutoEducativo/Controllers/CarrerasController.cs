@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InstitutoEducativo.Controllers
 {
@@ -54,11 +55,13 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[Authorize(Roles =("Empleado"))]
         public async Task<IActionResult> Create([Bind("CarreraId,Nombre")] Carrera carrera)
         {
             if (ModelState.IsValid)
             {
                 carrera.CarreraId = Guid.NewGuid();
+                carrera.Materias = new List<Materia>();
                 _context.Add(carrera);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

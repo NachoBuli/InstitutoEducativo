@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InstitutoEducativo.Controllers
 {
@@ -16,12 +17,14 @@ namespace InstitutoEducativo.Controllers
         private readonly DbContextInstituto _context;
         private readonly UserManager<Persona> _userManager;
         private readonly SignInManager<Persona> _signInManager;
+        private readonly RoleManager<Rol> _roleManager;      
 
-        public AlumnosController(DbContextInstituto context, UserManager<Persona> userManager, SignInManager<Persona> signInManager)
+        public AlumnosController(DbContextInstituto context, UserManager<Persona> userManager, SignInManager<Persona> signInManager, RoleManager<Rol> roleManager)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         // GET: Alumnos
@@ -30,18 +33,6 @@ namespace InstitutoEducativo.Controllers
             var dbContextInstituto = _context.Alumnos.Include(a => a.Carrera);
             return View(await dbContextInstituto.ToListAsync());
         }
-
-        //public IActionResult Autoregistrar()
-        //{
-        //    return View();
-        //}
-
-        //public async Task<IActionResult> AutoRegistrar()
-        //{
-
-        //}
-
-
 
         // GET: Alumnos/Details/5
         public async Task<IActionResult> Details(Guid? id)
@@ -63,31 +54,66 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Alumnos/Create
+        //[Authorize (Roles = "Empleado")]
         public IActionResult Create()
         {
             ViewData["CarreraId"] = new SelectList(_context.Carreras, "CarreraId", "Nombre");
             return View();
         }
 
-        // POST: Alumnos/Create
+        //POST: Alumnos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Activo,NumeroMatricula,CarreraId,FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Alumno alumno)
+       [HttpPost]
+       [ValidateAntiForgeryToken]
+       //[Authorize(Roles ="Empleado")]
+        public async Task<IActionResult> Create([Bind("Activo,NumeroMatricula,FechaAlta,CarreraId,Nombre,Apellido,Dni,Telefono,Direccion,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Alumno alumno)
         {
             if (ModelState.IsValid)
             {
+                var Alumnos = _context.Alumnos;
+                var MatriculaMax = 0;
+
+                alumno.Activo = true;
                 alumno.Id = Guid.NewGuid();
-                _context.Add(alumno);
-                await _context.SaveChangesAsync();
+                alumno.FechaAlta = DateTime.Now;
+                alumno.UserName = alumno.Email;
+
+                foreach (Alumno a in Alumnos)
+                {
+                    if (a.NumeroMatricula != 0)
+                    {
+                        var MatriculaAlumno = a.NumeroMatricula;
+                        if (MatriculaAlumno > MatriculaMax)
+                        {
+                            MatriculaMax = MatriculaAlumno;
+                        }
+                    }
+                }
+
+                var resultado = await _userManager.CreateAsync(alumno, alumno.PasswordHash);
+                if (resultado.Succeeded)
+                {
+                    Rol rolAlumno = null;
+                    var name = "Alumno";
+                    rolAlumno = await _roleManager.FindByNameAsync(name);
+
+                    if (rolAlumno == null)
+                    {
+                        rolAlumno = new Rol();
+                        rolAlumno.Name = name;
+                        var resultNewRol = await _roleManager.CreateAsync(rolAlumno);
+                    }
+
+                    var resultAddToRol = await _userManager.AddToRoleAsync(alumno, name);
+                }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CarreraId"] = new SelectList(_context.Carreras, "CarreraId", "Nombre", alumno.CarreraId);
             return View(alumno);
         }
 
-        // GET: Alumnos/Edit/5
+        //GET: Alumnos/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -141,6 +167,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Alumnos/Delete/5
+        [Authorize (Roles = "Alumno")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -173,6 +200,18 @@ namespace InstitutoEducativo.Controllers
         private bool AlumnoExists(Guid id)
         {
             return _context.Alumnos.Any(e => e.Id == id);
+        }
+
+        //[Authorize(Roles = "Alumno")]
+        public async Task<IActionResult> RegistrarMaterias(Guid? id)
+        {
+            //var alumno = _userManager.FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            Alumno alumno = (Alumno)await _userManager.GetUserAsync(HttpContext.User);
+            var carreraId = alumno.CarreraId;
+            var carrera = await _context.Carreras.FindAsync(carreraId);
+            var materias = carrera.Materias.Count();
+
+            return View(materias);
         }
     }
 }
