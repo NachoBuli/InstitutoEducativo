@@ -1,16 +1,16 @@
-﻿@model InstitutoEducativo.Models.Profesor
+﻿@model InstitutoEducativo.ViewModels.RegistroUsuario
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Registrar";
 }
 
-<h1>Create</h1>
+<h1>Registrar</h1>
 
-<h4>Profesor</h4>
+<h4>RegistroUsuario</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Registrar">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
@@ -28,6 +28,11 @@
                 <span asp-validation-for="Dni" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Telefono" class="control-label"></label>
                 <input asp-for="Telefono" class="form-control" />
                 <span asp-validation-for="Telefono" class="text-danger"></span>
@@ -38,19 +43,18 @@
                 <span asp-validation-for="Direccion" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Legajo" class="control-label"></label>
-                <input asp-for="Legajo" class="form-control" />
-                <span asp-validation-for="Legajo" class="text-danger"></span>
+                <label asp-for="Contrasena" class="control-label"></label>
+                <input asp-for="Contrasena" class="form-control" />
+                <span asp-validation-for="Contrasena" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label asp-for="ConfirmacionContrasena" class="control-label"></label>
+                <input asp-for="ConfirmacionContrasena" class="form-control" />
+                <span asp-validation-for="ConfirmacionContrasena" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PasswordHash" class="control-label"></label>
-                <input asp-for="PasswordHash" class="form-control" />
-                <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                <label asp-for="CarreraId" class="control-label">Carrera</label>
+                <select asp-for="CarreraId" class="form-control" asp-items="ViewBag.CarreraId"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
