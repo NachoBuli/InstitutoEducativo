@@ -209,7 +209,7 @@ namespace InstitutoEducativo.Controllers
             Alumno alumno = (Alumno)await _userManager.GetUserAsync(HttpContext.User);
             var carreraId = alumno.CarreraId;
             var carrera = await _context.Carreras.FindAsync(carreraId);
-            var materias = carrera.Materias.Count();
+            var materias = carrera.Materias;
 
             return View(materias);
         }
