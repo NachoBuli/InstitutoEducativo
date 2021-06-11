@@ -203,23 +203,38 @@ namespace InstitutoEducativo.Controllers
         }
 
         //[Authorize(Roles = "Alumno")]
-        public async Task<IActionResult> RegistrarMaterias(Guid? id)
+        public async Task<IActionResult> RegistrarMaterias()
         {
             //var alumno = _userManager.FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+           
             Alumno alumno = (Alumno)await _userManager.GetUserAsync(HttpContext.User);
-            var carreraId = alumno.CarreraId;
-            var carrera = await _context.Carreras.FindAsync(carreraId);
-            var materias = carrera.Materias;
+            if (alumno.Activo == true)
+            {
+                var carreraId = alumno.CarreraId;
+                var carrera = await _context.Carreras.Include(carrera => carrera.Materias)
+                    .FirstOrDefaultAsync(c => carreraId == c.CarreraId);
+                var materias = carrera.Materias;
+                return View(materias);
+            }else
+            {
+                return RedirectToAction("AccesoDenegado", "Account");
+            }
+            
 
-            return View(materias);
+            
         }
 
         public async Task<IActionResult> VerMateriasCursadas()
         {
-            Alumno alumno = (Alumno)await _userManager.GetUserAsync(HttpContext.User);
-            var materiasCursadas = alumno.AlumnosMateriasCursadas;
 
-            return View(materiasCursadas);
+            var alumnoid = Guid.Parse(_userManager.GetUserId(User));
+            var alumno = _context.Alumnos.Include(a => a.AlumnosMateriasCursadas).FirstOrDefault(a => a.Id == alumnoid);
+
+            if (alumno.AlumnosMateriasCursadas == null) 
+            {
+                return NotFound();
+            }
+            return View(alumno.AlumnosMateriasCursadas);
         }
     }
 }

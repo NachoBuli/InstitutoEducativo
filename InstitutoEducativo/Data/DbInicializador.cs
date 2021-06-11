@@ -12,7 +12,7 @@ namespace InstitutoEducativo.Data
         private readonly UserManager<Persona> _userManager;
         private readonly RoleManager<Rol> _rolManager;
 
-        public DbInicializador (UserManager<Persona> userManager, RoleManager<Rol> roleManager)
+        public DbInicializador(UserManager<Persona> userManager, RoleManager<Rol> roleManager)
         {
             _userManager = userManager;
             _rolManager = roleManager;
@@ -21,42 +21,42 @@ namespace InstitutoEducativo.Data
 
         public async void Seed()
         {
-         
-           
+            string rolAlu = "Alumno";
+            string rolEmp = "Empleado";
+            string rolProfesor = "Profesor";
+
             //rolAlumno = await _rolManager.FindByNameAsync("Alumno");
             //rolProf = await _rolManager.FindByNameAsync("Profesor");
             //rolEmpleado = await _rolManager.FindByNameAsync("Empleado");
 
-           
-                IniciarRolAlumno();
-         
-                IniciarRolProf();
-           
-                IniciarRolEmpleado();
-            
+            if (!_rolManager.Roles.Any()) //Si no hay roles
+            {
+                //no hay roles
+                //creo los roles
+
+                IniciarRol(rolAlu);
+                IniciarRol(rolEmp);
+                IniciarRol(rolProfesor);
+            }
+            else
+            {
+
+                //if (_rolManager.RoleExistsAsync(rolAlu).Wait()) //si no existe el rol alumno
+                //{
+                //    //Si no existe, lo creo
+                //    IniciarRol(rolAlu);
+                //}
+                ////y demas
+
+
+
+            }
+
 
         }
-
-
-        private void IniciarRolProf()
+        private async void IniciarRol(string nombre)
         {
-            _rolManager.CreateAsync(new Rol() { Name = "Alumno" }).Wait();
-            
-        
+            _rolManager.CreateAsync(new Rol() { Name = nombre }).Wait();
         }
-        private void IniciarRolAlumno()
-        {
-            _rolManager.CreateAsync(new Rol() { Name = "Empleado" }).Wait();
-
-
-        }
-        private void IniciarRolEmpleado()
-        {
-            _rolManager.CreateAsync(new Rol() { Name = "Profesor" }).Wait();
-
-
-        }
-      
-
     }
 }

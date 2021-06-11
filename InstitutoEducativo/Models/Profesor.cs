@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace InstitutoEducativo.Models
 { 
-public class Profesor : Persona // Antes de realizar la migracion heredaba de Empleado 
+public class Profesor : Empleado // Antes de realizar la migracion heredaba de Empleado 
 
 {
         //[Required(ErrorMessage = Validaciones.Required)]

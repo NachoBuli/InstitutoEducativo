@@ -51,25 +51,16 @@ namespace InstitutoEducativo.Controllers
 
                 foreach (Alumno alumno in Alumnos)
                 {
-                    if(alumno.Legajo != null)
+                    
+                    if (alumno.NumeroMatricula != 0)
                     {
-
-                        var ParseLegajo = int.Parse(alumno.Legajo);
-                        if (ParseLegajo > LegajoMax)
+                        var MatriculaAlumno = alumno.NumeroMatricula;
+                        if (MatriculaAlumno > MatriculaMax)
                         {
-                            LegajoMax = ParseLegajo;
-                        }
-
-                        if (alumno.NumeroMatricula != 0)
-                        {
-                            var MatriculaAlumno = alumno.NumeroMatricula;
-                            if (MatriculaAlumno > MatriculaMax)
-                            {
-                                MatriculaMax = MatriculaAlumno;
-                            }
+                            MatriculaMax = MatriculaAlumno;
                         }
                     }
-                 
+
                 }
 
                 Persona persona = new Alumno()
@@ -83,7 +74,7 @@ namespace InstitutoEducativo.Controllers
                     Telefono = modelo.Telefono,
                     Dni = modelo.Dni,
                     Apellido = modelo.Apellido,
-                    Legajo = "1" + (LegajoMax + 1).ToString(),
+                    //Legajo = "1" + (LegajoMax + 1).ToString(),
                     FechaAlta = DateTime.Now,
                     Activo = false,
                     NumeroMatricula = MatriculaMax++

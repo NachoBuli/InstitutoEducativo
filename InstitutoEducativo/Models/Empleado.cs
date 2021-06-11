@@ -10,7 +10,7 @@ namespace InstitutoEducativo.Models
 	public class Empleado : Persona
 
 	{
-        //[Required(ErrorMessage = Validaciones.Required)]
-        //public string Legajo { get; set; }
+        [Required(ErrorMessage = Validaciones.Required)]
+        public string Legajo { get; set; }
     }
 }

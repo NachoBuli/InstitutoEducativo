@@ -65,7 +65,7 @@ namespace InstitutoEducativo.Controllers
             {
                 materia.MateriaId = Guid.NewGuid();
                 var carrera = await _context.Carreras.FindAsync(materia.CarreraId);
-                carrera.Materias.Add(materia);
+      
                 _context.Add(materia);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

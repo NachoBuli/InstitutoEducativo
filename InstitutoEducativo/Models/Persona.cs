@@ -49,7 +49,7 @@ namespace InstitutoEducativo.Models
         [MaxLength(100, ErrorMessage = Validaciones.MaxLength)]
         public string Direccion { get; set; }
 
-        public string Legajo { get; set; }
+        //public string Legajo { get; set; }
 
 
 
