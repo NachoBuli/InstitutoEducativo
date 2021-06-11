@@ -23,26 +23,30 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CodigoMateria)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CupoMaximo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Carrera.Nombre)
-            </td>
-            <td>
-
-            </td>
-        </tr>
+        <form>
+            <tr >
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CodigoMateria)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CupoMaximo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Carrera.Nombre)
+                </td>
+                <td>
+                    <div>
+                        <input type="submit" name="AgregarMateria" class="btn btn-primary" />
+                    </div>
+                </td>
+            </tr>
+        </form>
 }
     </tbody>
 </table>

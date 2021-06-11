@@ -223,6 +223,11 @@ namespace InstitutoEducativo.Controllers
 
             
         }
+        public async Task<IActionResult> AgregarMateria(Materia materiaSelecionada)
+        {
+
+            return View();
+        }
 
         public async Task<IActionResult> VerMateriasCursadas()
         {

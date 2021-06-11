@@ -108,6 +108,7 @@ namespace InstitutoEducativo.Controllers
                 }
 
             }
+            ViewData["CarreraId"] = new SelectList(_miContexto.Carreras, "CarreraId", "Nombre");
             return View(modelo);
         }
 
