@@ -319,7 +319,7 @@ namespace InstitutoEducativo.Controllers
                         _context.Calificaciones.Add(calificacion);
                         _context.AlumnoMateriaCursadas.Add(amc);
                         alumno.AlumnosMateriasCursadas.Add(amc);
-                        _context.Update(alumno);
+                        _context.Alumnos.Update(alumno);
                         _context.SaveChanges();
 
                     }
@@ -345,7 +345,7 @@ namespace InstitutoEducativo.Controllers
            
             foreach (MateriaCursada mc in materia.MateriasCursadas)
             {
-                if (mc.AlumnoMateriaCursadas.Count < cupoMax)
+                if (mc.AlumnoMateriaCursadas.Count < cupoMax|| mc.AlumnoMateriaCursadas == null)
                 {
                     materiaCursadaLibre = mc;
                 }
@@ -363,7 +363,7 @@ namespace InstitutoEducativo.Controllers
                     Activo = false,
                     Materia = firstMateriaCursada.Materia,
                     ProfesorId = firstMateriaCursada.ProfesorId,
-                    Nombre = firstMateriaCursada.Materia.ToString()+firstMateriaCursada.Anio.ToString()+ materia.MateriasCursadas.Count.ToString()
+                    Nombre = materia.Nombre+firstMateriaCursada.Anio.ToString()+ materia.MateriasCursadas.Count.ToString()
 
                     };
                 _context.MateriaCursadas.Add(materiaCursadaLibre);
