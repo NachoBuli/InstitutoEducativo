@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<InstitutoEducativo.Models.Materia>
 
+<div class="bg-warning">@TempData["Message"]</div>
+            
+
+
 <table class="table">
     <thead>
         <tr>
@@ -22,9 +26,9 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <form>
-            <tr >
+        @foreach (var item in Model)
+        {
+            <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
@@ -42,11 +46,11 @@
                 </td>
                 <td>
                     <div>
-                        <input type="submit" name="AgregarMateria" class="btn btn-primary" />
+                        <a class="btn btn-outline-secondary" asp-controller="Alumnos" asp-action="agregarMateriaMostrar" asp-route-id="@item.MateriaId">Inscribirse</a>
                     </div>
+
                 </td>
             </tr>
-        </form>
-}
+        }
     </tbody>
 </table>

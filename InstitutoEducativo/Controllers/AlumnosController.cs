@@ -217,29 +217,163 @@ namespace InstitutoEducativo.Controllers
                 return View(materias);
             }else
             {
-                return RedirectToAction("AccesoDenegado", "Account");
+                return RedirectToAction("AccesoDenegado", "Accounts");
             }
             
 
             
         }
-        public async Task<IActionResult> AgregarMateria(Materia materiaSelecionada)
+        //[HttpPost, ActionName("AgregarMateria")]
+        public async Task<IActionResult> AgregarMateriaMostrar (Guid? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            return View();
+            var materia = await _context.Materias.FindAsync(id);
+            if (materia == null)
+            {
+                return NotFound();
+            }
+           
+            return View(materia);
         }
 
-        public async Task<IActionResult> VerMateriasCursadas()
+        public async Task<IActionResult> AgregarMateria(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var materia = _context.Materias.Include(mc => mc.MateriasCursadas)
+                .ThenInclude(ma => ma.AlumnoMateriaCursadas)
+                .ThenInclude(m => m.MateriaCursada)
+                .FirstOrDefault(m => m.MateriaId == id);
+
+            if (materia == null)
+            {
+                return NotFound();
+            }
+            var alumnoid = Guid.Parse(_userManager.GetUserId(User));
+            var alumno = _context.Alumnos.Include(a => a.AlumnosMateriasCursadas)
+                .ThenInclude(am => am.MateriaCursada)
+                .ThenInclude(mc => mc.Materia)
+                .FirstOrDefault(a => a.Id == alumnoid);
+
+            if(alumno != null)
+            {
+                if (alumno.AlumnosMateriasCursadas.Count >= 5)
+                {
+                    TempData["message"] = "No podes inscribirte en mas de 5 materias";
+                    return RedirectToAction("RegistrarMaterias", "Alumnos");
+                }
+                else
+                {
+                    bool encontrado = false;
+                    foreach (AlumnoMateriaCursada alumnomateriaCursada in alumno.AlumnosMateriasCursadas)
+                    {
+                        if (alumnomateriaCursada.MateriaCursada.Materia == materia)
+                        {
+                            encontrado = true;
+                        }
+                    }
+                    if (encontrado == true)
+                    {
+                        TempData["message"] = "Ya te inscribiste para esta materia";
+                        return RedirectToAction("RegistrarMaterias");
+                    }
+                    else
+                    {
+                        if(materia.MateriasCursadas.Count == 0)
+                        {
+                            TempData["message"] = "Disculpa pero, todavia no hay grupos disponibles. Intentá inscribirte en otro momento";
+                            return RedirectToAction("RegistrarMaterias");
+                        }
+                        Guid calificacionId = Guid.NewGuid();
+
+                        AlumnoMateriaCursada amc = new AlumnoMateriaCursada
+                        {
+
+                            Alumno = alumno,
+                            AlumnoId = alumno.Id,
+                            MateriaCursada = checkMateriaCursadaLibre(materia),
+                            MateriaCursadaId = checkMateriaCursadaLibre(materia).MateriaCursadaId,
+                            CalificacionId = calificacionId
+                        };
+                        alumno.AlumnosMateriasCursadas.Add(amc);
+                        _context.Update(alumno);
+                        _context.SaveChanges();
+
+                    }
+
+                }
+
+            }
+            else
+            {
+                return NotFound();
+            }
+
+
+
+            TempData["message"] = "Te inscribiste con exito";
+            return View("RegistrarMaterias");
+        }
+
+        private MateriaCursada checkMateriaCursadaLibre(Materia materia)
+        {
+            int cupoMax = materia.CupoMaximo;
+            MateriaCursada materiaCursadaLibre = null;
+           
+            foreach (MateriaCursada mc in materia.MateriasCursadas)
+            {
+                if (mc.AlumnoMateriaCursadas.Count < cupoMax)
+                {
+                    materiaCursadaLibre = mc;
+                }
+            }
+            if (materiaCursadaLibre == null)
+            {
+                
+                var firstMateriaCursada = materia.MateriasCursadas.First();
+                materiaCursadaLibre = new MateriaCursada
+                {
+                    MateriaCursadaId = Guid.NewGuid(),
+                    MateriaId = materia.MateriaId,
+                    Anio = firstMateriaCursada.Anio,
+                    Cuatrimestre = firstMateriaCursada.Cuatrimestre,
+                    Activo = false,
+                    Materia = firstMateriaCursada.Materia,
+                    ProfesorId = firstMateriaCursada.ProfesorId,
+                    Nombre = firstMateriaCursada.Materia.ToString()+firstMateriaCursada.Anio.ToString()+ materia.MateriasCursadas.Count.ToString()
+
+                    };
+                _context.MateriaCursadas.Add(materiaCursadaLibre);
+                _context.SaveChanges();
+                }
+            return materiaCursadaLibre;
+            }
+
+
+        public async Task<IActionResult> VerMateriasCursadasAlumno()
         {
 
             var alumnoid = Guid.Parse(_userManager.GetUserId(User));
             var alumno = _context.Alumnos.Include(a => a.AlumnosMateriasCursadas).FirstOrDefault(a => a.Id == alumnoid);
 
-            if (alumno.AlumnosMateriasCursadas == null) 
+            if (alumno.AlumnosMateriasCursadas == null)
             {
                 return NotFound();
             }
             return View(alumno.AlumnosMateriasCursadas);
         }
     }
-}
+                
+
+
+   
+     
+    }
+
