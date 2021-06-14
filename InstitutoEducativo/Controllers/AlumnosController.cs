@@ -305,12 +305,13 @@ namespace InstitutoEducativo.Controllers
                         Calificacion calificacion = new Calificacion
                         {
                             AlumnoMateriaCursada = amc,
-                 
+
                             CalificacionId = calificacionId,
                             Profesor = amc.MateriaCursada.Profesor,
                             ProfesorId = amc.MateriaCursada.ProfesorId,
                             Materia = materia,
-                            NotaFinal = -1111
+                            NotaFinal = -1111,
+                            //MateriaCursada = amc.MateriaCursada
                         
         
 
@@ -377,13 +378,24 @@ namespace InstitutoEducativo.Controllers
         {
 
             var alumnoid = Guid.Parse(_userManager.GetUserId(User));
-            var alumno = _context.Alumnos.Include(a => a.AlumnosMateriasCursadas).FirstOrDefault(a => a.Id == alumnoid);
+            var alumno = _context.Alumnos.Include(a => a.AlumnosMateriasCursadas).ThenInclude(am=>am.Calificacion).ThenInclude(c=>c.Materia).FirstOrDefault(a => a.Id == alumnoid);
+
 
             if (alumno.AlumnosMateriasCursadas == null)
             {
                 return NotFound();
             }
-            return View(alumno.AlumnosMateriasCursadas);
+            var alumnosMateriasCursadas = new List<AlumnoMateriaCursada>();
+            foreach(AlumnoMateriaCursada am in alumno.AlumnosMateriasCursadas)
+            {
+                if (!(am.Calificacion.NotaFinal==-1111)) {
+                    alumnosMateriasCursadas.Add(am);
+                    
+                
+                }
+            }
+
+            return View(alumnosMateriasCursadas);
         }
     }
                 
