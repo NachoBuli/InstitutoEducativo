@@ -398,11 +398,53 @@ namespace InstitutoEducativo.Controllers
 
             return View(alumnosMateriasCursadas);
         }
+
+        public async Task<IActionResult> MisMaterias()
+        {
+            var alumnoid = Guid.Parse(_userManager.GetUserId(User));
+            var Alumno = _context.Alumnos
+                .Include(a => a.AlumnosMateriasCursadas)
+                .ThenInclude(amc => amc.MateriaCursada)
+                .ThenInclude(mc => mc.Materia)
+                .FirstOrDefault(a => a.Id == alumnoid);
+            var alumnoMateriasCursadas = Alumno.AlumnosMateriasCursadas;
+            var amcActivos = new List<AlumnoMateriaCursada>();
+            foreach (AlumnoMateriaCursada amc in alumnoMateriasCursadas)
+            {
+                if (amc.MateriaCursada.Activo)
+                {
+                    amcActivos.Add(amc);
+                }
+            }
+            return View(amcActivos);
+        }
+
+        public async Task<IActionResult> CancelarInscripcion (Guid? Id)
+
+        {
+            if (Id == null)
+            {
+                return NotFound();
+            }
+            var alumnoid = Guid.Parse(_userManager.GetUserId(User));
+            var alumno = _context.Alumnos
+               .FirstOrDefault(a => a.Id == alumnoid);
+        
+            var alumnosMateriaCursada = _context.AlumnoMateriaCursadas
+                .FirstOrDefault(amc => amc.AlumnoId == alumnoid && amc.MateriaCursadaId == Id);
+
+            alumno.AlumnosMateriasCursadas.Remove(alumnosMateriaCursada);
+            _context.AlumnoMateriaCursadas.Remove(alumnosMateriaCursada);
+            _context.Calificaciones.Remove(alumnosMateriaCursada.Calificacion);
+            _context.Alumnos.Update(alumno);
+            _context.SaveChanges();
+            return RedirectToAction("MisMaterias");
+        }
     }
-                
 
 
-   
-     
-    }
+
+
+
+}
 

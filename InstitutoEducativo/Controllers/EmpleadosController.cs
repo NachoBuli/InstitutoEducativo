@@ -85,8 +85,10 @@ namespace InstitutoEducativo.Controllers
                     }
 
                     var resultAddToRol = await _userManager.AddToRoleAsync(empleado, name);
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+            
+                
             }
             return View(empleado);
         }

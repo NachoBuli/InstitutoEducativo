@@ -37,6 +37,8 @@ namespace InstitutoEducativo.Controllers
             var materiaCursada = await _context.MateriaCursadas
                 .Include(m => m.Materia)
                 .Include(m => m.Profesor)
+                .Include(m => m.AlumnoMateriaCursadas)
+                .ThenInclude(amc => amc.Alumno)
                 .FirstOrDefaultAsync(m => m.MateriaCursadaId == id);
             if (materiaCursada == null)
             {

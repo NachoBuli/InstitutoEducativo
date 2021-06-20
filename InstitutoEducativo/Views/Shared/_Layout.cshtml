@@ -33,11 +33,14 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Alumnos" asp-action="VerMateriasCursadasAlumno">Calificaciones</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Alumnos" asp-action="MisMaterias">Mis Materias</a>
+                                </li>
                             }
                             if (User.IsInRole("Empleado"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Profesor" asp-action="ListarMateriasCursadas">Materias</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Materias" asp-action="Index">Materias</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Carreras" asp-action="Index">Carrera</a>
