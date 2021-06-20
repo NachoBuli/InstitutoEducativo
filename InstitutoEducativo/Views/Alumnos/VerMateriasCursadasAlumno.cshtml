@@ -4,17 +4,14 @@
     ViewData["Title"] = "VerMateriasCursadasAlumno";
 }
 
-<h1>VerMateriasCursadasAlumno</h1>
+<h1>Materias Ya Cursadas con Nota Final</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Alumno.Nombre)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Calificacion.Materia)
             </th>
@@ -27,9 +24,6 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alumno.Nombre)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Calificacion.Materia.Nombre)
             </td>

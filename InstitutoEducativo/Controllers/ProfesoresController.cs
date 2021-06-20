@@ -52,23 +52,38 @@ namespace InstitutoEducativo.Controllers
             return View(profesor);
         }
 
-        public async Task<IActionResult> ListarMateriasCursadas()
+        public async Task<IActionResult> ListarMateriasCursadas() // esta mal
         {
-            //Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);/*Buscar profe logeado*/
-            Profesor profesor = new Profesor();
+            Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);                    
+            
             var materiaCursadas = _context.MateriaCursadas
-                .Where(m => m.ProfesorId == profesor.Id);
+                .Include(mc => mc.AlumnoMateriaCursadas)
+                .ThenInclude(amc => amc.Alumno)
+                .FirstOrDefault(m => m.ProfesorId == profesor.Id);
+            if(materiaCursadas == null)
+            {
+                return View();
+            }
 
-
-            return View(materiaCursadas);
+            return View(profesor.MateriasCursadasActivas);
         }
-        public async Task<IActionResult> MostrarAlumnos(Guid materiaCursadaId)
-        {
-            var materiaCursada = _context.MateriaCursadas.Find(materiaCursadaId);
-            var alumnoMateriaCursadas = materiaCursada.AlumnoMateriaCursadas;
-            ViewData["ListaAlumnos"] = alumnoMateriaCursadas;
 
-            return View();
+
+
+        public async Task<IActionResult> MostrarAlumnosPorMateriaCursada(Guid? id) // esta bien
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var materiaCursada = _context.MateriaCursadas
+                .Include(mc => mc.AlumnoMateriaCursadas)
+                .ThenInclude(amc => amc.Alumno)
+                .FirstOrDefault(mc => mc.MateriaCursadaId == id);
+           
+
+            return View(materiaCursada.AlumnoMateriaCursadas);
         }
 
 
@@ -197,5 +212,7 @@ namespace InstitutoEducativo.Controllers
         {
             return _context.Profesores.Any(e => e.Id == id);
         }
+
+        
     }
 }

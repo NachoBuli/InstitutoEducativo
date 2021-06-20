@@ -300,34 +300,35 @@ namespace InstitutoEducativo.Controllers
                             AlumnoId = alumno.Id,
                             MateriaCursada = checkMateriaCursadaLibre(materia),
                             MateriaCursadaId = checkMateriaCursadaLibre(materia).MateriaCursadaId,
-                       
+                            CalificacionId = calificacionId
+
                         };
+
                         Calificacion calificacion = new Calificacion
                         {
                             AlumnoMateriaCursada = amc,
-
                             CalificacionId = calificacionId,
                             Profesor = amc.MateriaCursada.Profesor,
                             ProfesorId = amc.MateriaCursada.ProfesorId,
                             Materia = materia,
-                            NotaFinal = -1111,
-                            //MateriaCursada = amc.MateriaCursada
-                        
-        
-
+                            NotaFinal = -1111
                         };
-                        amc.Calificacion = calificacion;
-                        _context.Calificaciones.Add(calificacion);
+                        MateriaCursada materiaCursada = _context.MateriaCursadas
+                            .Include(mc => mc.Calificaciones)
+                            .FirstOrDefault(mc => mc.MateriaCursadaId == amc.MateriaCursadaId);
+
+
+                        materiaCursada.Calificaciones.Add(calificacion);
                         _context.AlumnoMateriaCursadas.Add(amc);
                         alumno.AlumnosMateriasCursadas.Add(amc);
+                        _context.Calificaciones.Add(calificacion);
                         _context.Alumnos.Update(alumno);
                         _context.SaveChanges();
-
                     }
 
                 }
 
-            }
+                }
             else
             {
                 return NotFound();

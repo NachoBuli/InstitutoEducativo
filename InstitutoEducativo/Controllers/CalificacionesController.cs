@@ -8,16 +8,19 @@ using Microsoft.EntityFrameworkCore;
 using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace InstitutoEducativo.Controllers
 {
     public class CalificacionesController : Controller
     {
         private readonly DbContextInstituto _context;
+        private readonly UserManager<Persona> _userManager;
 
-        public CalificacionesController(DbContextInstituto context)
+        public CalificacionesController(DbContextInstituto context, UserManager<Persona> userManager )
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Calificaciones
@@ -71,20 +74,12 @@ namespace InstitutoEducativo.Controllers
             ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Apellido", calificacion.ProfesorId);
             return View(calificacion);
         }
+        //authorize
         // GET: Calificaciones/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid? CalificacionId) //validaciones
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            Calificacion calificacion = _context.Calificaciones.FirstOrDefault(c => c.CalificacionId == CalificacionId);
 
-            var calificacion = await _context.Calificaciones.FindAsync(id);
-            if (calificacion == null)
-            {
-                return NotFound();
-            }
-            ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Apellido", calificacion.ProfesorId);
             return View(calificacion);
         }
 
@@ -93,8 +88,9 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("CalificacionId,NotaFinal,ProfesorId")] Calificacion calificacion)
+        public async Task<IActionResult> Edit(Guid id, [Bind("NotaFinal")] Calificacion calificacion)
         {
+            Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
             if (id != calificacion.CalificacionId)
             {
                 return NotFound();

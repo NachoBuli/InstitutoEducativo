@@ -27,9 +27,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Materia)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Profesor)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -53,10 +50,7 @@
             </td>
             
             <td>
-                <a asp-action="MostrarAlumnos" asp-route-id="@item.MateriaCursadaId">Mostrar Alumnos</a>
-                <a>@ViewData["ListaAlumnos"]</a>
-                
-                
+                <a class="btn btn-outline-secondary" asp-controller="Profesores" asp-action="MostrarAlumnosPorMateriaCursada" asp-route-id="@item.MateriaCursadaId">Mostrar alumnos</a>
             </td>
         </tr>
 }
