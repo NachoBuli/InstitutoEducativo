@@ -153,5 +153,11 @@ namespace InstitutoEducativo.Controllers
         {
             return _context.Carreras.Any(e => e.CarreraId == id);
         }
+
+        public async Task<IActionResult> MostrarCarreras()
+        {
+            return View(_context.Carreras);
+        }
     }
+
 }

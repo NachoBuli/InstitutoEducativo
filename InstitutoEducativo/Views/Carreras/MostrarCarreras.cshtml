@@ -1,0 +1,37 @@
+﻿@model IEnumerable<InstitutoEducativo.Models.Carrera>
+
+@{
+    ViewData["Title"] = "MostrarCarreras";
+}
+
+<h1>MostrarCarreras</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                <div>
+                    <a class="btn btn-outline-secondary" asp-controller="Materias" asp-action="MostrarMateriasSegunCarrera" asp-route-id="@item.CarreraId">Ver Materias</a>
+
+                </div>
+
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

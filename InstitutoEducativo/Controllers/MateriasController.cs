@@ -161,5 +161,13 @@ namespace InstitutoEducativo.Controllers
         {
             return _context.Materias.Any(e => e.MateriaId == id);
         }
+
+        public async Task<IActionResult> MostrarMateriasSegunCarrera(Guid ID)
+        {
+            //Guid cId = (Guid)ViewData["ID"];
+            var carrera = _context.Carreras.Include(c=>c.Materias).FirstOrDefault(c => c.CarreraId == ID);
+
+            return View(carrera.Materias);
+        }
     }
 }

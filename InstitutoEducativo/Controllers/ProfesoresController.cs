@@ -213,6 +213,10 @@ namespace InstitutoEducativo.Controllers
             return _context.Profesores.Any(e => e.Id == id);
         }
 
-        
+        public async Task<IActionResult> MostrarProfesores()
+        {
+            
+            return View(_context.Profesores);
+        }
     }
 }
