@@ -218,5 +218,40 @@ namespace InstitutoEducativo.Controllers
             
             return View(_context.Profesores);
         }
+
+
+        // Dejo lo que seria la logica en general, pero de esta manera no funciona correctamente
+        //public async Task<IActionResult> NotaPromedioMateriaCursada()
+        //{
+        //    Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
+        //    var materiaCursadas = _context.MateriaCursadas
+        //        .Include(mc => mc.AlumnoMateriaCursadas)
+        //        .ThenInclude(amc => amc.Alumno)
+        //        .FirstOrDefault(m => m.ProfesorId == profesor.Id);
+        //    if (materiaCursadas == null)
+        //    {
+        //        return View();
+        //    }
+
+        //    var materiaCursada = _context.MateriaCursadas.ToList();
+        //    var materiaCursada = profesor.MateriasCursadasActivas;
+        //    int calificaciones = 0;
+        //    Double promedio = 0;
+        //    int alumnosPorCursada;
+
+        //    foreach (var mCursada in materiaCursada)
+        //    {
+        //        alumnosPorCursada = mCursada.AlumnoMateriaCursadas.Count;
+
+        //        foreach (var amc in mCursada.AlumnoMateriaCursadas)
+        //        {
+        //            calificaciones = +amc.Calificacion.NotaFinal;
+        //        }
+
+        //        promedio = calificaciones / alumnosPorCursada;
+        //    }
+
+        //    return View("ListarMateriasCursadas", promedio);
+        //}
     }
 }

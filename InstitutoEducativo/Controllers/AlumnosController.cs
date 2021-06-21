@@ -362,7 +362,7 @@ namespace InstitutoEducativo.Controllers
                     MateriaId = materia.MateriaId,
                     Anio = firstMateriaCursada.Anio,
                     Cuatrimestre = firstMateriaCursada.Cuatrimestre,
-                    Activo = false,
+                    Activo = true,
                     Materia = firstMateriaCursada.Materia,
                     ProfesorId = firstMateriaCursada.ProfesorId,
                     Nombre = materia.Nombre+firstMateriaCursada.Anio.ToString()+ materia.MateriasCursadas.Count.ToString()
