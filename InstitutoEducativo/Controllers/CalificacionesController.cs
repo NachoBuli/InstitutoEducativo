@@ -26,8 +26,15 @@ namespace InstitutoEducativo.Controllers
         // GET: Calificaciones
         public async Task<IActionResult> Index()
         {
-            var dbContextInstituto = _context.Calificaciones.Include(c => c.Profesor);
-            return View(await dbContextInstituto.ToListAsync());
+            Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
+
+            var calificaciones = _context.Calificaciones
+                .Include(c => c.AlumnoMateriaCursada)
+                .ThenInclude(amc => amc.Alumno)
+                .Include(c => c.Materia)
+                .Where(c => c.ProfesorId == profesor.Id && c.NotaFinal != -1111);
+
+            return View(calificaciones);
         }
         [Authorize(Roles = "Alumno")]
 
@@ -76,9 +83,18 @@ namespace InstitutoEducativo.Controllers
         }
         //authorize
         // GET: Calificaciones/Edit/5
-        public async Task<IActionResult> Edit(Guid? CalificacionId) //validaciones
+        public IActionResult Edit(Guid? id) //validaciones
         {
-            Calificacion calificacion = _context.Calificaciones.FirstOrDefault(c => c.CalificacionId == CalificacionId);
+            if (id == null)
+            {
+                return NotFound();
+            }
+            Calificacion calificacion = _context.Calificaciones
+                .Include(c => c.AlumnoMateriaCursada)
+                .ThenInclude(amc => amc.MateriaCursada)
+                .Include(c => c.AlumnoMateriaCursada)
+                .ThenInclude(amc=> amc.Alumno)
+                .FirstOrDefault(c => c.CalificacionId == id);
 
             return View(calificacion);
         }
@@ -88,24 +104,40 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("NotaFinal")] Calificacion calificacion)
+        public async Task<IActionResult> Edit(Guid? id, int NotaFinal)
         {
+      
             Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
-            if (id != calificacion.CalificacionId)
+            if (id == null)
             {
                 return NotFound();
             }
 
+            if (NotaFinal > 10 || NotaFinal < 0)
+            {
+                TempData["Message"] = "Entra un valor entre 0 y 10";
+                return RedirectToAction("Edit");
+            }
+
+            Calificacion c = _context.Calificaciones
+                .Include(c => c.AlumnoMateriaCursada)
+                .ThenInclude(amc => amc.MateriaCursada)
+                .Include(c => c.AlumnoMateriaCursada)
+                .ThenInclude(amc => amc.Alumno)
+                .FirstOrDefault(c => c.CalificacionId == id);
+            c.NotaFinal = NotaFinal;
+            profesor.CalificacionesRealizadas.Add(c);
             if (ModelState.IsValid)
             {
                 try
-                {
-                    _context.Update(calificacion);
+                {   
+                    _context.Calificaciones.Update(c);
+                    _context.Profesores.Update(profesor);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CalificacionExists(calificacion.CalificacionId))
+                    if (!CalificacionExists(c.CalificacionId))
                     {
                         return NotFound();
                     }
@@ -114,10 +146,11 @@ namespace InstitutoEducativo.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                var Id = c.MateriaCursada.MateriaCursadaId;
+                return RedirectToAction("Index");
             }
-            ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Apellido", calificacion.ProfesorId);
-            return View(calificacion);
+           
+            return View(c);
         }
 
         // GET: Calificaciones/Delete/5

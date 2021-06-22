@@ -291,6 +291,42 @@ namespace InstitutoEducativo.Controllers
                             TempData["message"] = "Disculpa pero, todavia no hay grupos disponibles. Intentá inscribirte en otro momento";
                             return RedirectToAction("RegistrarMaterias");
                         }
+
+                        #region
+                        int cupoMax = materia.CupoMaximo;
+                        MateriaCursada materiaCursadaLibre = null;
+                        var MateriaConMateriasCursadas = _context.Materias
+                            .Include(m => m.MateriasCursadas)
+                            .FirstOrDefault(m => m.MateriaId == materia.MateriaId);
+
+                        foreach (MateriaCursada mc in materia.MateriasCursadas)
+                        {
+                            if (mc.AlumnoMateriaCursadas.Count < cupoMax || mc.AlumnoMateriaCursadas == null)
+                            {
+                                materiaCursadaLibre = mc;
+                            }
+                        }
+                        if (materiaCursadaLibre == null)
+                        {
+
+                            var firstMateriaCursada = materia.MateriasCursadas.First();
+                            materiaCursadaLibre = new MateriaCursada
+                            {
+                                MateriaCursadaId = Guid.NewGuid(),
+                                MateriaId = materia.MateriaId,
+                                Anio = firstMateriaCursada.Anio,
+                                Cuatrimestre = firstMateriaCursada.Cuatrimestre,
+                                Activo = true,
+                                Materia = firstMateriaCursada.Materia,
+                                ProfesorId = firstMateriaCursada.ProfesorId,
+                                Nombre = materia.Nombre + firstMateriaCursada.Anio.ToString() + materia.MateriasCursadas.Count.ToString(),
+                                Calificaciones = new List<Calificacion>()
+                            };
+                            _context.MateriaCursadas.Add(materiaCursadaLibre);
+                            _context.SaveChanges();
+                        }
+
+                        #endregion
                         Guid calificacionId = Guid.NewGuid();
 
                         AlumnoMateriaCursada amc = new AlumnoMateriaCursada
@@ -298,8 +334,8 @@ namespace InstitutoEducativo.Controllers
 
                             Alumno = alumno,
                             AlumnoId = alumno.Id,
-                            MateriaCursada = checkMateriaCursadaLibre(materia),
-                            MateriaCursadaId = checkMateriaCursadaLibre(materia).MateriaCursadaId,
+                            MateriaCursada = materiaCursadaLibre,
+                            MateriaCursadaId = materiaCursadaLibre.MateriaCursadaId,
                             CalificacionId = calificacionId
 
                         };
@@ -324,6 +360,10 @@ namespace InstitutoEducativo.Controllers
                         _context.Calificaciones.Add(calificacion);
                         _context.Alumnos.Update(alumno);
                         _context.SaveChanges();
+
+                        calificacion.AlumnoMateriaCursada = amc;
+                        _context.Calificaciones.Update(calificacion);
+                        _context.SaveChanges();
                     }
 
                 }
@@ -340,39 +380,39 @@ namespace InstitutoEducativo.Controllers
             return RedirectToAction("RegistrarMaterias");
         }
 
-        private MateriaCursada checkMateriaCursadaLibre(Materia materia)
-        {
-            int cupoMax = materia.CupoMaximo;
-            MateriaCursada materiaCursadaLibre = null;
+        //private MateriaCursada checkMateriaCursadaLibre(Materia materia)
+        //{
+        //    int cupoMax = materia.CupoMaximo;
+        //    MateriaCursada materiaCursadaLibre = null;
            
-            foreach (MateriaCursada mc in materia.MateriasCursadas)
-            {
-                if (mc.AlumnoMateriaCursadas.Count < cupoMax|| mc.AlumnoMateriaCursadas == null)
-                {
-                    materiaCursadaLibre = mc;
-                }
-            }
-            if (materiaCursadaLibre == null)
-            {
+        //    foreach (MateriaCursada mc in materia.MateriasCursadas)
+        //    {
+        //        if (mc.AlumnoMateriaCursadas.Count < cupoMax|| mc.AlumnoMateriaCursadas == null)
+        //        {
+        //            materiaCursadaLibre = mc;
+        //        }
+        //    }
+        //    if (materiaCursadaLibre == null)
+        //    {
                 
-                var firstMateriaCursada = materia.MateriasCursadas.First();
-                materiaCursadaLibre = new MateriaCursada
-                {
-                    MateriaCursadaId = Guid.NewGuid(),
-                    MateriaId = materia.MateriaId,
-                    Anio = firstMateriaCursada.Anio,
-                    Cuatrimestre = firstMateriaCursada.Cuatrimestre,
-                    Activo = true,
-                    Materia = firstMateriaCursada.Materia,
-                    ProfesorId = firstMateriaCursada.ProfesorId,
-                    Nombre = materia.Nombre+firstMateriaCursada.Anio.ToString()+ materia.MateriasCursadas.Count.ToString()
+        //        var firstMateriaCursada = materia.MateriasCursadas.First();
+        //        materiaCursadaLibre = new MateriaCursada
+        //        {
+        //            MateriaCursadaId = Guid.NewGuid(),
+        //            MateriaId = materia.MateriaId,
+        //            Anio = firstMateriaCursada.Anio,
+        //            Cuatrimestre = firstMateriaCursada.Cuatrimestre,
+        //            Activo = true,
+        //            Materia = firstMateriaCursada.Materia,
+        //            ProfesorId = firstMateriaCursada.ProfesorId,
+        //            Nombre = materia.Nombre+firstMateriaCursada.Anio.ToString()+ materia.MateriasCursadas.Count.ToString()
 
-                    };
-                _context.MateriaCursadas.Add(materiaCursadaLibre);
-                _context.SaveChanges();
-                }
-            return materiaCursadaLibre;
-            }
+        //            };
+        //        _context.MateriaCursadas.Add(materiaCursadaLibre);
+        //        _context.SaveChanges();
+        //        }
+        //    return materiaCursadaLibre;
+        //    }
 
 
         public async Task<IActionResult> VerMateriasCursadasAlumno()
@@ -431,7 +471,13 @@ namespace InstitutoEducativo.Controllers
                .FirstOrDefault(a => a.Id == alumnoid);
         
             var alumnosMateriaCursada = _context.AlumnoMateriaCursadas
+                .Include(amc=>amc.Calificacion)
                 .FirstOrDefault(amc => amc.AlumnoId == alumnoid && amc.MateriaCursadaId == Id);
+            if (alumnosMateriaCursada.Calificacion.NotaFinal != -1111)
+            {
+                TempData["Message"] = "No podes eliminar una materia cursada con una calificacion asociada";
+                return RedirectToAction("MisMaterias");
+            }
 
             alumno.AlumnosMateriasCursadas.Remove(alumnosMateriaCursada);
             _context.AlumnoMateriaCursadas.Remove(alumnosMateriaCursada);

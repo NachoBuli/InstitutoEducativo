@@ -4,9 +4,12 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
 
-<h4>Calificacion</h4>
+
+<h4>Dar Calificacion</h4>
+<div class="bg-danger ">
+    @TempData["Message"]
+</div>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -29,6 +32,3 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
