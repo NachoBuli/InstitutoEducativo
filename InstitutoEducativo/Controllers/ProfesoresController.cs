@@ -9,6 +9,7 @@ using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using InstitutoEducativo.ViewModels;
 
 namespace InstitutoEducativo.Controllers
 {
@@ -55,9 +56,12 @@ namespace InstitutoEducativo.Controllers
         public async Task<IActionResult> ListarMateriasCursadas()
         {
             Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
-            List <MateriaCursada> listaMateriasActivasPorProfesor = new List <MateriaCursada>();
+            List <MateriaCursadaConNotaPromedio> listaMateriasActivasPorProfesor = new List <MateriaCursadaConNotaPromedio>();
+            List<int> promedios = new List<int>();
             var materiaCursadas = _context.MateriaCursadas
-                .Include(mc => mc.AlumnoMateriaCursadas);
+                .Include(mc => mc.Calificaciones);
+          
+          
 
             if (materiaCursadas == null)
             {
@@ -71,11 +75,16 @@ namespace InstitutoEducativo.Controllers
                 {
                     if (mc.ProfesorId == profesor.Id && mc.Activo)
                     {
-                        listaMateriasActivasPorProfesor.Add(mc);
+                        MateriaCursadaConNotaPromedio mcp = new MateriaCursadaConNotaPromedio
+                        {
+                            materiaCursada = mc
+                        };
+                           
+                        listaMateriasActivasPorProfesor.Add(mcp);
+                        
                     }
                 }
             }
-
             return View(listaMateriasActivasPorProfesor);
         }
 
@@ -233,38 +242,38 @@ namespace InstitutoEducativo.Controllers
         }
 
 
-        //Dejo lo que seria la logica en general, pero de esta manera no funciona correctamente
-        public async Task<IActionResult> NotaPromedioMateriaCursada()
-        {
-            Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
-            var materiaCursadas = _context.MateriaCursadas
-                .Include(mc => mc.AlumnoMateriaCursadas)
-                .ThenInclude(amc => amc.Alumno)
-                .FirstOrDefault(m => m.ProfesorId == profesor.Id);
-            if (materiaCursadas == null)
-            {
-                return View();
-            }
+        //        //Dejo lo que seria la logica en general, pero de esta manera no funciona correctamente
+        //        public async Task<IActionResult> NotaPromedioMateriaCursada()
+        //        {
+        //            Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
+        //            var materiaCursadas = _context.MateriaCursadas
+        //                .Include(mc => mc.AlumnoMateriaCursadas)
+        //                .ThenInclude(amc => amc.Alumno)
+        //                .FirstOrDefault(m => m.ProfesorId == profesor.Id);
+        //            if (materiaCursadas == null)
+        //            {
+        //                return View();
+        //            }
 
-            //var materiaCursada = _context.MateriaCursadas.ToList();
-            var materiaCursada = profesor.MateriasCursadasActivas;
-            int calificaciones = 0;
-            Double promedio = 0;
-            int alumnosPorCursada;
+        //            //var materiaCursada = _context.MateriaCursadas.ToList();
+        //            var materiaCursada = profesor.MateriasCursadasActivas;
+        //            int calificaciones = 0;
+        //            Double promedio = 0;
+        //            int alumnosPorCursada;
 
-            foreach (var mCursada in materiaCursada)
-            {
-                alumnosPorCursada = mCursada.AlumnoMateriaCursadas.Count;
+        //            foreach (var mCursada in materiaCursada)
+        //            {
+        //                alumnosPorCursada = mCursada.AlumnoMateriaCursadas.Count;
 
-                foreach (var amc in mCursada.AlumnoMateriaCursadas)
-                {
-                    calificaciones = +amc.Calificacion.NotaFinal;
-                }
+        //                foreach (var amc in mCursada.AlumnoMateriaCursadas)
+        //                {
+        //                    calificaciones = +amc.Calificacion.NotaFinal;
+        //                }
 
-                promedio = calificaciones / alumnosPorCursada;
-            }
+        //                promedio = calificaciones / alumnosPorCursada;
+        //            }
 
-            return View("ListarMateriasCursadas", promedio);
-        }
+        //            return View("ListarMateriasCursadas", promedio);
+        //        }
     }
 }
