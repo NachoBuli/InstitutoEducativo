@@ -91,6 +91,8 @@ namespace InstitutoEducativo.Controllers
                     }
                 }
 
+                MatriculaMax = MatriculaMax + 1;
+
                 var resultado = await _userManager.CreateAsync(alumno, alumno.PasswordHash);
                 if (resultado.Succeeded)
                 {
@@ -167,7 +169,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Alumnos/Delete/5
-        [Authorize (Roles = "Alumno")]
+        [Authorize (Roles = "Empleado")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -486,6 +488,31 @@ namespace InstitutoEducativo.Controllers
             _context.SaveChanges();
             return RedirectToAction("MisMaterias");
         }
+
+        public async Task<IActionResult> ActivarAlumno(Guid? id)
+        {
+
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var alumno = await _context.Alumnos.FindAsync(id);
+
+            if(alumno == null)
+            {
+                return NotFound();
+            }
+
+            if (alumno.Activo == false)
+            {
+                alumno.Activo = true;
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InstitutoEducativo.Controllers
 {
@@ -164,6 +165,31 @@ namespace InstitutoEducativo.Controllers
         private bool MateriaCursadaExists(Guid id)
         {
             return _context.MateriaCursadas.Any(e => e.MateriaCursadaId == id);
+        }
+
+        [Authorize(Roles = "Empleado")]
+        public async Task<IActionResult> ActivarMateriaCursada(Guid? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var matCurs = await _context.MateriaCursadas.FindAsync(id);
+
+            if(matCurs == null)
+            {
+                return NotFound();
+            }
+
+            if(matCurs.Activo == false)
+            {
+                matCurs.Activo = true;
+
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

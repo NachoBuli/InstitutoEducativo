@@ -243,37 +243,39 @@ namespace InstitutoEducativo.Controllers
 
 
         //        //Dejo lo que seria la logica en general, pero de esta manera no funciona correctamente
-        //        public async Task<IActionResult> NotaPromedioMateriaCursada()
-        //        {
-        //            Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
-        //            var materiaCursadas = _context.MateriaCursadas
-        //                .Include(mc => mc.AlumnoMateriaCursadas)
-        //                .ThenInclude(amc => amc.Alumno)
-        //                .FirstOrDefault(m => m.ProfesorId == profesor.Id);
-        //            if (materiaCursadas == null)
-        //            {
-        //                return View();
-        //            }
+        public async Task<IActionResult> NotaPromedioMateriaCursada()
+        {
+            Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
+            var materiaCursadas = _context.MateriaCursadas
+                .Include(mc => mc.AlumnoMateriaCursadas)
+                .ThenInclude(amc => amc.Alumno)
+                .FirstOrDefault(m => m.ProfesorId == profesor.Id);
+            if (materiaCursadas == null)
+            {
+                return View();
+            }
 
-        //            //var materiaCursada = _context.MateriaCursadas.ToList();
-        //            var materiaCursada = profesor.MateriasCursadasActivas;
-        //            int calificaciones = 0;
-        //            Double promedio = 0;
-        //            int alumnosPorCursada;
+            //var materiaCursada = _context.MateriaCursadas.ToList();
+            var materiaCursada = profesor.MateriasCursadasActivas;
+            int calificaciones = 0;
+            Double promedio = 0;
+            int alumnosPorCursada;
 
-        //            foreach (var mCursada in materiaCursada)
-        //            {
-        //                alumnosPorCursada = mCursada.AlumnoMateriaCursadas.Count;
+            foreach (var mCursada in materiaCursada)
+            {
+                alumnosPorCursada = mCursada.AlumnoMateriaCursadas.Count;
 
-        //                foreach (var amc in mCursada.AlumnoMateriaCursadas)
-        //                {
-        //                    calificaciones = +amc.Calificacion.NotaFinal;
-        //                }
+                foreach (var amc in mCursada.AlumnoMateriaCursadas)
+                {
+                    calificaciones = +amc.Calificacion.NotaFinal;
+                }
 
-        //                promedio = calificaciones / alumnosPorCursada;
-        //            }
+                promedio = calificaciones / alumnosPorCursada;
+            }
 
-        //            return View("ListarMateriasCursadas", promedio);
-        //        }
+            promedio = Math.Round(promedio, 2, MidpointRounding.AwayFromZero);
+
+            return View("ListarMateriasCursadas", promedio);
+        }
     }
 }

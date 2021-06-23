@@ -57,7 +57,11 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.MateriaCursadaId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.MateriaCursadaId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MateriaCursadaId">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.MateriaCursadaId">Delete</a> |
+                @if (item.Activo == false)
+                {
+                    <a asp-action="ActivarMateriaCursada" asp-route-id="@item.MateriaCursadaId">Activar</a>
+                }
             </td>
         </tr>
 }
