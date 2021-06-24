@@ -142,6 +142,7 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="Empleado")]
         public async Task<IActionResult> Edit(Guid id, [Bind("Activo,NumeroMatricula,CarreraId,FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Alumno alumno)
         {
             if (id != alumno.Id)
@@ -209,7 +210,7 @@ namespace InstitutoEducativo.Controllers
             return _context.Alumnos.Any(e => e.Id == id);
         }
 
-        //[Authorize(Roles = "Alumno")]
+        [Authorize(Roles = "Alumno")]
         public async Task<IActionResult> RegistrarMaterias()
         {
             //var alumno = _userManager.FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
@@ -428,7 +429,7 @@ namespace InstitutoEducativo.Controllers
         //    return materiaCursadaLibre;
         //    }
 
-
+        [Authorize(Roles ="Alumno")]
         public async Task<IActionResult> VerMateriasCursadasAlumno()
         {
 
@@ -453,6 +454,7 @@ namespace InstitutoEducativo.Controllers
             return View(alumnosMateriasCursadas);
         }
 
+        [Authorize(Roles= "Alumno")]
         public async Task<IActionResult> MisMaterias()
         {
             var alumnoid = Guid.Parse(_userManager.GetUserId(User));
@@ -473,6 +475,7 @@ namespace InstitutoEducativo.Controllers
             return View(amcActivos);
         }
 
+        [Authorize(Roles ="Alumno")]
         public async Task<IActionResult> CancelarInscripcion (Guid? Id)
 
         {
@@ -501,6 +504,8 @@ namespace InstitutoEducativo.Controllers
             return RedirectToAction("MisMaterias");
         }
 
+
+        [Authorize(Roles ="Empleado")]
         public async Task<IActionResult> ActivarAlumno(Guid? id)
         {
 

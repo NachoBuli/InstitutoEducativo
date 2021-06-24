@@ -36,8 +36,8 @@ namespace InstitutoEducativo.Controllers
 
             return View(calificaciones);
         }
-        [Authorize(Roles = "Alumno")]
 
+        [Authorize(Roles = "Alumno")]
         // GET: Calificaciones/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
@@ -104,6 +104,7 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="Profesor")]
         public async Task<IActionResult> Edit(Guid? id, int NotaFinal)
         {
       
