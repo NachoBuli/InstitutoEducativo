@@ -143,8 +143,15 @@ namespace InstitutoEducativo.Controllers
                     }
 
                     var resultAddToRol = await _userManager.AddToRoleAsync(profesor, name);
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+
+                foreach (var error in resultado.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+
             }
             return View(profesor);
         }

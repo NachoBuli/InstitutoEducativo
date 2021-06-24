@@ -24,13 +24,24 @@ namespace InstitutoEducativo.Controllers
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
-            this._rolManager = rolManager;
+            _rolManager = rolManager;
         }
 
         // GET: Empleados
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Empleados.ToListAsync());
+            var Empleados = _context.Empleados;
+            List <Empleado> EmpleadosSinProfes = new List<Empleado>() ;
+
+            foreach (Empleado e in Empleados)
+            {
+                if (!(e is Profesor))
+                {
+                    EmpleadosSinProfes.Add(e);
+                }
+            }
+
+            return View(EmpleadosSinProfes);
         }
 
         // GET: Empleados/Details/5
@@ -87,8 +98,11 @@ namespace InstitutoEducativo.Controllers
                     var resultAddToRol = await _userManager.AddToRoleAsync(empleado, name);
                     return RedirectToAction(nameof(Index));
                 }
-            
-                
+
+                foreach (var error in resultado.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
             }
             return View(empleado);
         }

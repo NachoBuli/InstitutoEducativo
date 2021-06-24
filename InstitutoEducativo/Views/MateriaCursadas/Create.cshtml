@@ -6,7 +6,7 @@
 
 <h1>Crear</h1>
 
-<h4>MateriaCursada</h4>
+<h4>Materia Cursada</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,7 +19,7 @@
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Anio" class="control-label"></label>
+                <label class="control-label"></label> @Html.Raw("Año")
                 <input asp-for="Anio" class="form-control" />
                 <span asp-validation-for="Anio" class="text-danger"></span>
             </div>
@@ -34,22 +34,22 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="MateriaId" class="control-label"></label>
-                <select asp-for="MateriaId" class ="form-control" asp-items="ViewBag.MateriaId"></select>
+                <label  class="control-label"></label> @Html.Raw("Materia")
+                <select asp-for="MateriaId" class="form-control" asp-items="ViewBag.MateriaId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="ProfesorId" class="control-label"></label>
-                <select asp-for="ProfesorId" class ="form-control" asp-items="ViewBag.ProfesorId"></select>
+                <label class="control-label"></label> @Html.Raw("Profesor")
+                <select asp-for="ProfesorId" class="form-control" asp-items="ViewBag.ProfesorId"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Crear" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Volver a MateriaCursada</a>
+    <a asp-action="Index">Volver a Materia Cursada</a>
 </div>
 
 @section Scripts {

@@ -108,8 +108,13 @@ namespace InstitutoEducativo.Controllers
                     }
 
                     var resultAddToRol = await _userManager.AddToRoleAsync(alumno, name);
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                foreach (var error in resultado.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
             }
             ViewData["CarreraId"] = new SelectList(_context.Carreras, "CarreraId", "Nombre", alumno.CarreraId);
             return View(alumno);

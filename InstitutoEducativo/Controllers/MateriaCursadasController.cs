@@ -52,7 +52,7 @@ namespace InstitutoEducativo.Controllers
         // GET: MateriaCursadas/Create
         public IActionResult Create()
         {
-            ViewData["MateriaId"] = new SelectList(_context.Materias, "MateriaId", "CodigoMateria");
+            ViewData["MateriaId"] = new SelectList(_context.Materias, "MateriaId", "Nombre");
             ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Apellido");
             return View();
         }
@@ -71,7 +71,7 @@ namespace InstitutoEducativo.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MateriaId"] = new SelectList(_context.Materias, "MateriaId", "CodigoMateria", materiaCursada.MateriaId);
+            ViewData["MateriaId"] = new SelectList(_context.Materias, "MateriaId", "Nombre", materiaCursada.MateriaId);
             ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Apellido", materiaCursada.ProfesorId);
             return View(materiaCursada);
         }
@@ -89,7 +89,7 @@ namespace InstitutoEducativo.Controllers
             {
                 return NotFound();
             }
-            ViewData["MateriaId"] = new SelectList(_context.Materias, "MateriaId", "CodigoMateria", materiaCursada.MateriaId);
+            ViewData["MateriaId"] = new SelectList(_context.Materias, "MateriaId", "Nombre", materiaCursada.MateriaId);
             ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Apellido", materiaCursada.ProfesorId);
             return View(materiaCursada);
         }

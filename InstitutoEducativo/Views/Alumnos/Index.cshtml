@@ -12,7 +12,7 @@
     {
         @if (User.IsInRole("Empleado"))
         {
-            <a asp-action="Create">Crear nuevo</a>
+            <a asp-action="Create">Crear Nuevo</a>
         }
         @if (User.IsInRole("Alumno"))
         {
@@ -61,11 +61,11 @@
                 {
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Detalles</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Detalles</a> 
+                        <a class="text-hide" asp-action="Delete" asp-route-id="@item.Id">Eliminar</a> 
                         @if(item.Activo == false)
                         {
-                            <a asp-action="ActivarAlumno" asp-route-id="@item.Id">Activar alumno</a>
+                    <a asp-action="ActivarAlumno" asp-route-id="@item.Id">| Activar alumno</a>
                         }
                     </td>
                 }
