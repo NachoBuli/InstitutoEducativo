@@ -81,6 +81,30 @@ namespace InstitutoEducativo.Controllers
                 empleado.Id = Guid.NewGuid();
                 empleado.FechaAlta = DateTime.Today;
                 empleado.UserName = empleado.Email;
+
+                var empleadosYProfesores = _context.Empleados.ToList();
+                var legajoMax = 0;
+                foreach (var p in _context.Profesores.ToList())
+                {
+                    empleadosYProfesores.Add(p);
+                }
+
+                foreach (var e in empleadosYProfesores)
+                {
+                    if (e.Legajo != null)
+                    {
+                        var legajoEmpleado = int.Parse(e.Legajo);
+                        if (legajoEmpleado > legajoMax)
+                        {
+                            legajoMax = legajoEmpleado;
+                        }
+                    }
+                }
+
+                legajoMax = legajoMax + 1;
+
+                empleado.Legajo = legajoMax.ToString();
+                
                 var resultado = await _userManager.CreateAsync(empleado, empleado.PasswordHash);
                 if (resultado.Succeeded)
                 {
