@@ -268,10 +268,17 @@ namespace InstitutoEducativo.Controllers
                 .ThenInclude(am => am.MateriaCursada)
                 .ThenInclude(mc => mc.Materia)
                 .FirstOrDefault(a => a.Id == alumnoid);
-
+            var cont = 0;
             if(alumno != null)
             {
-                if (alumno.AlumnosMateriasCursadas.Count >= 5)
+                foreach(AlumnoMateriaCursada amc in alumno.AlumnosMateriasCursadas)
+                {
+                    if (amc.MateriaCursada.Activo)
+                    {
+                        cont++;
+                    }
+                }
+                if (cont >= 5)
                 {
                     TempData["message"] = "No podes inscribirte en mas de 5 materias";
                     return RedirectToAction("RegistrarMaterias", "Alumnos");
