@@ -9,6 +9,7 @@ using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using InstitutoEducativo.ViewModels;
 
 namespace InstitutoEducativo.Controllers
 {
@@ -52,20 +53,39 @@ namespace InstitutoEducativo.Controllers
             return View(profesor);
         }
 
-        public async Task<IActionResult> ListarMateriasCursadas() // esta mal
+        public async Task<IActionResult> ListarMateriasCursadas()
         {
-            Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);                    
-            
+            Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
+            List <MateriaCursadaConNotaPromedio> listaMateriasActivasPorProfesor = new List <MateriaCursadaConNotaPromedio>();
+            List<int> promedios = new List<int>();
             var materiaCursadas = _context.MateriaCursadas
-                .Include(mc => mc.AlumnoMateriaCursadas)
-                .ThenInclude(amc => amc.Alumno)
-                .FirstOrDefault(m => m.ProfesorId == profesor.Id);
-            if(materiaCursadas == null)
+                .Include(mc => mc.Calificaciones);
+          
+          
+
+            if (materiaCursadas == null)
             {
+                ViewData["Message"] = "No hay materias cursadas";
                 return View();
             }
+            else
 
-            return View(profesor.MateriasCursadasActivas);
+            {
+                foreach (MateriaCursada mc in materiaCursadas)
+                {
+                    if (mc.ProfesorId == profesor.Id && mc.Activo)
+                    {
+                        MateriaCursadaConNotaPromedio mcp = new MateriaCursadaConNotaPromedio
+                        {
+                            materiaCursada = mc
+                        };
+                           
+                        listaMateriasActivasPorProfesor.Add(mcp);
+                        
+                    }
+                }
+            }
+            return View(listaMateriasActivasPorProfesor);
         }
 
 
@@ -80,9 +100,11 @@ namespace InstitutoEducativo.Controllers
             var materiaCursada = _context.MateriaCursadas
                 .Include(mc => mc.AlumnoMateriaCursadas)
                 .ThenInclude(amc => amc.Alumno)
+                .Include(mc => mc.AlumnoMateriaCursadas)
+                .ThenInclude(amc => amc.Calificacion)
                 .FirstOrDefault(mc => mc.MateriaCursadaId == id);
-           
 
+            
             return View(materiaCursada.AlumnoMateriaCursadas);
         }
 
@@ -98,7 +120,7 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles =("Empleado"))]
+        [Authorize(Roles =("Empleado"))]
         public async Task<IActionResult> Create([Bind("FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Profesor profesor)
         {
             if (ModelState.IsValid)
@@ -106,6 +128,7 @@ namespace InstitutoEducativo.Controllers
                 profesor.Id = Guid.NewGuid();
                 profesor.FechaAlta = DateTime.Today;
                 profesor.UserName = profesor.Email;
+
                 var resultado = await _userManager.CreateAsync(profesor, profesor.PasswordHash);
                 if (resultado.Succeeded)
                 {
@@ -121,8 +144,15 @@ namespace InstitutoEducativo.Controllers
                     }
 
                     var resultAddToRol = await _userManager.AddToRoleAsync(profesor, name);
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+
+                foreach (var error in resultado.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+
             }
             return View(profesor);
         }
@@ -149,6 +179,7 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="Empleado")]
         public async Task<IActionResult> Edit(Guid id, [Bind("FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Profesor profesor)
         {
             if (id != profesor.Id)
@@ -200,6 +231,7 @@ namespace InstitutoEducativo.Controllers
         // POST: Profesores/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="Empleado")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var profesor = await _context.Profesores.FindAsync(id);
@@ -217,6 +249,43 @@ namespace InstitutoEducativo.Controllers
         {
             
             return View(_context.Profesores);
+        }
+
+
+        //        //Dejo lo que seria la logica en general, pero de esta manera no funciona correctamente
+        public async Task<IActionResult> NotaPromedioMateriaCursada()
+        {
+            Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
+            var materiaCursadas = _context.MateriaCursadas
+                .Include(mc => mc.AlumnoMateriaCursadas)
+                .ThenInclude(amc => amc.Alumno)
+                .FirstOrDefault(m => m.ProfesorId == profesor.Id);
+            if (materiaCursadas == null)
+            {
+                return View();
+            }
+
+            //var materiaCursada = _context.MateriaCursadas.ToList();
+            var materiaCursada = profesor.MateriasCursadasActivas;
+            int calificaciones = 0;
+            Double promedio = 0;
+            int alumnosPorCursada;
+
+            foreach (var mCursada in materiaCursada)
+            {
+                alumnosPorCursada = mCursada.AlumnoMateriaCursadas.Count;
+
+                foreach (var amc in mCursada.AlumnoMateriaCursadas)
+                {
+                    calificaciones = +amc.Calificacion.NotaFinal;
+                }
+
+                promedio = calificaciones / alumnosPorCursada;
+            }
+
+            promedio = Math.Round(promedio, 2, MidpointRounding.AwayFromZero);
+
+            return View("ListarMateriasCursadas", promedio);
         }
     }
 }

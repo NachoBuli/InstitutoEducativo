@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InstitutoEducativo.Controllers
 {
@@ -51,7 +52,7 @@ namespace InstitutoEducativo.Controllers
         // GET: MateriaCursadas/Create
         public IActionResult Create()
         {
-            ViewData["MateriaId"] = new SelectList(_context.Materias, "MateriaId", "CodigoMateria");
+            ViewData["MateriaId"] = new SelectList(_context.Materias, "MateriaId", "Nombre");
             ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Apellido");
             return View();
         }
@@ -70,7 +71,7 @@ namespace InstitutoEducativo.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MateriaId"] = new SelectList(_context.Materias, "MateriaId", "CodigoMateria", materiaCursada.MateriaId);
+            ViewData["MateriaId"] = new SelectList(_context.Materias, "MateriaId", "Nombre", materiaCursada.MateriaId);
             ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Apellido", materiaCursada.ProfesorId);
             return View(materiaCursada);
         }
@@ -88,7 +89,7 @@ namespace InstitutoEducativo.Controllers
             {
                 return NotFound();
             }
-            ViewData["MateriaId"] = new SelectList(_context.Materias, "MateriaId", "CodigoMateria", materiaCursada.MateriaId);
+            ViewData["MateriaId"] = new SelectList(_context.Materias, "MateriaId", "Nombre", materiaCursada.MateriaId);
             ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Apellido", materiaCursada.ProfesorId);
             return View(materiaCursada);
         }
@@ -164,6 +165,31 @@ namespace InstitutoEducativo.Controllers
         private bool MateriaCursadaExists(Guid id)
         {
             return _context.MateriaCursadas.Any(e => e.MateriaCursadaId == id);
+        }
+
+        [Authorize(Roles = "Empleado")]
+        public async Task<IActionResult> ActivarMateriaCursada(Guid? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var matCurs = await _context.MateriaCursadas.FindAsync(id);
+
+            if(matCurs == null)
+            {
+                return NotFound();
+            }
+
+            if(matCurs.Activo == false)
+            {
+                matCurs.Activo = true;
+
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

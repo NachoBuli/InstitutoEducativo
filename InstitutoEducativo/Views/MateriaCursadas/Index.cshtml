@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>MateriaCursada</h1>
+<h1>Materia Cursada</h1>
 
 <p>
     <a asp-action="Create">Crear Nueva</a>
@@ -55,9 +55,13 @@
                 @Html.DisplayFor(modelItem => item.Profesor.Apellido)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.MateriaCursadaId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MateriaCursadaId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MateriaCursadaId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.MateriaCursadaId">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.MateriaCursadaId">Detalles</a> 
+                <a class="text-hide" asp-action="Delete" asp-route-id="@item.MateriaCursadaId">Delete</a> 
+                @if (item.Activo == false)
+                {
+            <a asp-action="ActivarMateriaCursada" asp-route-id="@item.MateriaCursadaId">| Activar</a>
+                }
             </td>
         </tr>
 }

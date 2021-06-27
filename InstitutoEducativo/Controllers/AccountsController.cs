@@ -46,7 +46,6 @@ namespace InstitutoEducativo.Controllers
             if (ModelState.IsValid)
             {
                 var Alumnos = _miContexto.Alumnos;
-                var LegajoMax = 0;
                 var MatriculaMax = 0;
 
                 foreach (Alumno alumno in Alumnos)
@@ -60,8 +59,9 @@ namespace InstitutoEducativo.Controllers
                             MatriculaMax = MatriculaAlumno;
                         }
                     }
-
                 }
+
+                MatriculaMax = MatriculaMax + 1;
 
                 Persona persona = new Alumno()
                 {
@@ -74,10 +74,9 @@ namespace InstitutoEducativo.Controllers
                     Telefono = modelo.Telefono,
                     Dni = modelo.Dni,
                     Apellido = modelo.Apellido,
-                    //Legajo = "1" + (LegajoMax + 1).ToString(),
                     FechaAlta = DateTime.Now,
                     Activo = false,
-                    NumeroMatricula = MatriculaMax++
+                    NumeroMatricula = MatriculaMax
                     
                 };
 

@@ -24,13 +24,24 @@ namespace InstitutoEducativo.Controllers
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
-            this._rolManager = rolManager;
+            _rolManager = rolManager;
         }
 
         // GET: Empleados
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Empleados.ToListAsync());
+            var Empleados = _context.Empleados;
+            List <Empleado> EmpleadosSinProfes = new List<Empleado>() ;
+
+            foreach (Empleado e in Empleados)
+            {
+                if (!(e is Profesor))
+                {
+                    EmpleadosSinProfes.Add(e);
+                }
+            }
+
+            return View(EmpleadosSinProfes);
         }
 
         // GET: Empleados/Details/5
@@ -62,7 +73,7 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles="Empleado")]
+        [Authorize(Roles="Empleado")]
         public async Task<IActionResult> Create([Bind("FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Empleado empleado)
         {
             if (ModelState.IsValid)
@@ -70,6 +81,7 @@ namespace InstitutoEducativo.Controllers
                 empleado.Id = Guid.NewGuid();
                 empleado.FechaAlta = DateTime.Today;
                 empleado.UserName = empleado.Email;
+                
                 var resultado = await _userManager.CreateAsync(empleado, empleado.PasswordHash);
                 if (resultado.Succeeded)
                 {
@@ -87,8 +99,11 @@ namespace InstitutoEducativo.Controllers
                     var resultAddToRol = await _userManager.AddToRoleAsync(empleado, name);
                     return RedirectToAction(nameof(Index));
                 }
-            
-                
+
+                foreach (var error in resultado.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
             }
             return View(empleado);
         }

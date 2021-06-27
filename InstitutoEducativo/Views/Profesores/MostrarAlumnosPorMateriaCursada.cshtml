@@ -18,7 +18,7 @@
                 @Html.DisplayNameFor(model => model.Alumno.Apellido)
             </th>
             <th>
-               
+                @Html.DisplayNameFor(model => model.Calificacion.NotaFinal)
             </th>
             <th></th>
         </tr>
@@ -33,7 +33,15 @@
                 @Html.DisplayFor(modelItem => item.Alumno.Apellido)
             </td>
             <td>
-          
+                @if (item.Calificacion.NotaFinal == -1111)
+                {
+                    @Html.Raw("Sin Calificación")
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.Calificacion.NotaFinal)
+                }
+
             </td>
 
             <td>

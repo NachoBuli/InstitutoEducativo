@@ -91,6 +91,8 @@ namespace InstitutoEducativo.Controllers
                     }
                 }
 
+                MatriculaMax = MatriculaMax + 1;
+
                 var resultado = await _userManager.CreateAsync(alumno, alumno.PasswordHash);
                 if (resultado.Succeeded)
                 {
@@ -106,8 +108,13 @@ namespace InstitutoEducativo.Controllers
                     }
 
                     var resultAddToRol = await _userManager.AddToRoleAsync(alumno, name);
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                foreach (var error in resultado.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
             }
             ViewData["CarreraId"] = new SelectList(_context.Carreras, "CarreraId", "Nombre", alumno.CarreraId);
             return View(alumno);
@@ -135,6 +142,7 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="Empleado")]
         public async Task<IActionResult> Edit(Guid id, [Bind("Activo,NumeroMatricula,CarreraId,FechaAlta,Nombre,Apellido,Dni,Telefono,Direccion,Legajo,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Alumno alumno)
         {
             if (id != alumno.Id)
@@ -167,7 +175,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Alumnos/Delete/5
-        [Authorize (Roles = "Alumno")]
+        [Authorize (Roles = "Empleado")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -202,7 +210,7 @@ namespace InstitutoEducativo.Controllers
             return _context.Alumnos.Any(e => e.Id == id);
         }
 
-        //[Authorize(Roles = "Alumno")]
+        [Authorize(Roles = "Alumno")]
         public async Task<IActionResult> RegistrarMaterias()
         {
             //var alumno = _userManager.FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
@@ -261,10 +269,17 @@ namespace InstitutoEducativo.Controllers
                 .ThenInclude(am => am.MateriaCursada)
                 .ThenInclude(mc => mc.Materia)
                 .FirstOrDefault(a => a.Id == alumnoid);
-
+            var cont = 0;
             if(alumno != null)
             {
-                if (alumno.AlumnosMateriasCursadas.Count >= 5)
+                foreach(AlumnoMateriaCursada amc in alumno.AlumnosMateriasCursadas)
+                {
+                    if (amc.MateriaCursada.Activo)
+                    {
+                        cont++;
+                    }
+                }
+                if (cont >= 5)
                 {
                     TempData["message"] = "No podes inscribirte en mas de 5 materias";
                     return RedirectToAction("RegistrarMaterias", "Alumnos");
@@ -291,6 +306,42 @@ namespace InstitutoEducativo.Controllers
                             TempData["message"] = "Disculpa pero, todavia no hay grupos disponibles. Intentá inscribirte en otro momento";
                             return RedirectToAction("RegistrarMaterias");
                         }
+
+                        #region
+                        int cupoMax = materia.CupoMaximo;
+                        MateriaCursada materiaCursadaLibre = null;
+                        var MateriaConMateriasCursadas = _context.Materias
+                            .Include(m => m.MateriasCursadas)
+                            .FirstOrDefault(m => m.MateriaId == materia.MateriaId);
+
+                        foreach (MateriaCursada mc in materia.MateriasCursadas)
+                        {
+                            if (mc.AlumnoMateriaCursadas.Count < cupoMax || mc.AlumnoMateriaCursadas == null)
+                            {
+                                materiaCursadaLibre = mc;
+                            }
+                        }
+                        if (materiaCursadaLibre == null)
+                        {
+
+                            var firstMateriaCursada = materia.MateriasCursadas.First();
+                            materiaCursadaLibre = new MateriaCursada
+                            {
+                                MateriaCursadaId = Guid.NewGuid(),
+                                MateriaId = materia.MateriaId,
+                                Anio = firstMateriaCursada.Anio,
+                                Cuatrimestre = firstMateriaCursada.Cuatrimestre,
+                                Activo = true,
+                                Materia = firstMateriaCursada.Materia,
+                                ProfesorId = firstMateriaCursada.ProfesorId,
+                                Nombre = materia.Nombre + firstMateriaCursada.Anio.ToString() + materia.MateriasCursadas.Count.ToString(),
+                                Calificaciones = new List<Calificacion>()
+                            };
+                            _context.MateriaCursadas.Add(materiaCursadaLibre);
+                            _context.SaveChanges();
+                        }
+
+                        #endregion
                         Guid calificacionId = Guid.NewGuid();
 
                         AlumnoMateriaCursada amc = new AlumnoMateriaCursada
@@ -298,8 +349,8 @@ namespace InstitutoEducativo.Controllers
 
                             Alumno = alumno,
                             AlumnoId = alumno.Id,
-                            MateriaCursada = checkMateriaCursadaLibre(materia),
-                            MateriaCursadaId = checkMateriaCursadaLibre(materia).MateriaCursadaId,
+                            MateriaCursada = materiaCursadaLibre,
+                            MateriaCursadaId = materiaCursadaLibre.MateriaCursadaId,
                             CalificacionId = calificacionId
 
                         };
@@ -324,6 +375,10 @@ namespace InstitutoEducativo.Controllers
                         _context.Calificaciones.Add(calificacion);
                         _context.Alumnos.Update(alumno);
                         _context.SaveChanges();
+
+                        calificacion.AlumnoMateriaCursada = amc;
+                        _context.Calificaciones.Update(calificacion);
+                        _context.SaveChanges();
                     }
 
                 }
@@ -340,41 +395,41 @@ namespace InstitutoEducativo.Controllers
             return RedirectToAction("RegistrarMaterias");
         }
 
-        private MateriaCursada checkMateriaCursadaLibre(Materia materia)
-        {
-            int cupoMax = materia.CupoMaximo;
-            MateriaCursada materiaCursadaLibre = null;
+        //private MateriaCursada checkMateriaCursadaLibre(Materia materia)
+        //{
+        //    int cupoMax = materia.CupoMaximo;
+        //    MateriaCursada materiaCursadaLibre = null;
            
-            foreach (MateriaCursada mc in materia.MateriasCursadas)
-            {
-                if (mc.AlumnoMateriaCursadas.Count < cupoMax|| mc.AlumnoMateriaCursadas == null)
-                {
-                    materiaCursadaLibre = mc;
-                }
-            }
-            if (materiaCursadaLibre == null)
-            {
+        //    foreach (MateriaCursada mc in materia.MateriasCursadas)
+        //    {
+        //        if (mc.AlumnoMateriaCursadas.Count < cupoMax|| mc.AlumnoMateriaCursadas == null)
+        //        {
+        //            materiaCursadaLibre = mc;
+        //        }
+        //    }
+        //    if (materiaCursadaLibre == null)
+        //    {
                 
-                var firstMateriaCursada = materia.MateriasCursadas.First();
-                materiaCursadaLibre = new MateriaCursada
-                {
-                    MateriaCursadaId = Guid.NewGuid(),
-                    MateriaId = materia.MateriaId,
-                    Anio = firstMateriaCursada.Anio,
-                    Cuatrimestre = firstMateriaCursada.Cuatrimestre,
-                    Activo = false,
-                    Materia = firstMateriaCursada.Materia,
-                    ProfesorId = firstMateriaCursada.ProfesorId,
-                    Nombre = materia.Nombre+firstMateriaCursada.Anio.ToString()+ materia.MateriasCursadas.Count.ToString()
+        //        var firstMateriaCursada = materia.MateriasCursadas.First();
+        //        materiaCursadaLibre = new MateriaCursada
+        //        {
+        //            MateriaCursadaId = Guid.NewGuid(),
+        //            MateriaId = materia.MateriaId,
+        //            Anio = firstMateriaCursada.Anio,
+        //            Cuatrimestre = firstMateriaCursada.Cuatrimestre,
+        //            Activo = true,
+        //            Materia = firstMateriaCursada.Materia,
+        //            ProfesorId = firstMateriaCursada.ProfesorId,
+        //            Nombre = materia.Nombre+firstMateriaCursada.Anio.ToString()+ materia.MateriasCursadas.Count.ToString()
 
-                    };
-                _context.MateriaCursadas.Add(materiaCursadaLibre);
-                _context.SaveChanges();
-                }
-            return materiaCursadaLibre;
-            }
+        //            };
+        //        _context.MateriaCursadas.Add(materiaCursadaLibre);
+        //        _context.SaveChanges();
+        //        }
+        //    return materiaCursadaLibre;
+        //    }
 
-
+        [Authorize(Roles ="Alumno")]
         public async Task<IActionResult> VerMateriasCursadasAlumno()
         {
 
@@ -399,6 +454,7 @@ namespace InstitutoEducativo.Controllers
             return View(alumnosMateriasCursadas);
         }
 
+        [Authorize(Roles= "Alumno")]
         public async Task<IActionResult> MisMaterias()
         {
             var alumnoid = Guid.Parse(_userManager.GetUserId(User));
@@ -419,6 +475,7 @@ namespace InstitutoEducativo.Controllers
             return View(amcActivos);
         }
 
+        [Authorize(Roles ="Alumno")]
         public async Task<IActionResult> CancelarInscripcion (Guid? Id)
 
         {
@@ -431,7 +488,13 @@ namespace InstitutoEducativo.Controllers
                .FirstOrDefault(a => a.Id == alumnoid);
         
             var alumnosMateriaCursada = _context.AlumnoMateriaCursadas
+                .Include(amc=>amc.Calificacion)
                 .FirstOrDefault(amc => amc.AlumnoId == alumnoid && amc.MateriaCursadaId == Id);
+            if (alumnosMateriaCursada.Calificacion.NotaFinal != -1111)
+            {
+                TempData["Message"] = "No podes eliminar una materia cursada con una calificacion asociada";
+                return RedirectToAction("MisMaterias");
+            }
 
             alumno.AlumnosMateriasCursadas.Remove(alumnosMateriaCursada);
             _context.AlumnoMateriaCursadas.Remove(alumnosMateriaCursada);
@@ -440,6 +503,33 @@ namespace InstitutoEducativo.Controllers
             _context.SaveChanges();
             return RedirectToAction("MisMaterias");
         }
+
+
+        [Authorize(Roles ="Empleado")]
+        public async Task<IActionResult> ActivarAlumno(Guid? id)
+        {
+
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var alumno = await _context.Alumnos.FindAsync(id);
+
+            if(alumno == null)
+            {
+                return NotFound();
+            }
+
+            if (alumno.Activo == false)
+            {
+                alumno.Activo = true;
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 
 
