@@ -22,9 +22,6 @@
                 @Html.DisplayNameFor(model => model.Cuatrimestre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Activo)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Materia)
             </th>
             <th>
@@ -46,10 +43,7 @@
                 @Html.DisplayFor(modelItem => item.Cuatrimestre)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Activo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Materia.CodigoMateria)
+                @Html.DisplayFor(modelItem => item.Materia.Nombre)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Profesor.Apellido)
