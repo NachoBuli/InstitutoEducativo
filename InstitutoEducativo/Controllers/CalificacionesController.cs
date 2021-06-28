@@ -104,10 +104,10 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles ="Profesor")]
+        [Authorize(Roles = "Profesor")]
         public async Task<IActionResult> Edit(Guid? id, int NotaFinal)
         {
-      
+
             Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
             if (id == null)
             {
@@ -126,6 +126,13 @@ namespace InstitutoEducativo.Controllers
                 .Include(c => c.AlumnoMateriaCursada)
                 .ThenInclude(amc => amc.Alumno)
                 .FirstOrDefault(c => c.CalificacionId == id);
+
+            if(c.MateriaCursada.ProfesorId != profesor.Id)
+            {
+                TempData["Message"] = "La calificacion solo la puede otorgar el profesor titular.";
+                return RedirectToAction("Edit");
+            }
+
             c.NotaFinal = NotaFinal;
             profesor.CalificacionesRealizadas.Add(c);
             if (ModelState.IsValid)

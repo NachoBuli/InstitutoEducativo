@@ -60,6 +60,14 @@ namespace InstitutoEducativo.Controllers
         {
             if (ModelState.IsValid)
             {
+                foreach (var c in _context.Carreras)
+                {
+                    if (c.Nombre.ToLower() == carrera.Nombre.ToLower())
+                    {
+                        TempData["Message"] = "Ya existe una carrera con el nombre '" + carrera.Nombre + "'";
+                        return View();
+                    }
+                }
                 carrera.CarreraId = Guid.NewGuid();
                 carrera.Materias = new List<Materia>();
                 _context.Add(carrera);
