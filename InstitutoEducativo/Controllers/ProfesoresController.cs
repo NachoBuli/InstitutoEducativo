@@ -125,6 +125,8 @@ namespace InstitutoEducativo.Controllers
         {
             if (ModelState.IsValid)
             {
+                var Legajo = "prof - " + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Second + _context.Empleados.Count();
+                profesor.Legajo = Legajo;
                 profesor.Id = Guid.NewGuid();
                 profesor.FechaAlta = DateTime.Today;
                 profesor.UserName = profesor.Email;

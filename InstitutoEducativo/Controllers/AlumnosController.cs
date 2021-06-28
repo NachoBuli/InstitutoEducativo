@@ -216,14 +216,46 @@ namespace InstitutoEducativo.Controllers
             //var alumno = _userManager.FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
            
             Alumno alumno = (Alumno)await _userManager.GetUserAsync(HttpContext.User);
+            var carreraId = alumno.CarreraId;
+            var carrera = await _context.Carreras.Include(carrera => carrera.Materias)
+                .ThenInclude(m => m.MateriasCursadas)
+                .ThenInclude(mc => mc.AlumnoMateriaCursadas)
+                .FirstOrDefaultAsync(c => carreraId == c.CarreraId);
+            bool esta = false;
+            //var materias = carrera.Materias;
+            var listaMaterias = new List<Materia>();
             if (alumno.Activo == true)
-            {
-                var carreraId = alumno.CarreraId;
-                var carrera = await _context.Carreras.Include(carrera => carrera.Materias)
-                    .FirstOrDefaultAsync(c => carreraId == c.CarreraId);
-                var materias = carrera.Materias;
-                return View(materias);
-            }else
+                 {
+                foreach (Materia m in carrera.Materias)
+                {
+                    foreach (MateriaCursada mc in m.MateriasCursadas)
+                    {
+                        foreach (AlumnoMateriaCursada amc in mc.AlumnoMateriaCursadas)
+                        {
+                            if (amc.AlumnoId == alumno.Id)
+                            {
+                                esta = true;
+                                break;
+                            }
+                        }
+                        if (esta)
+                        {
+                            break;
+                        }
+
+                    }
+                    if (!esta)
+                    {
+                        listaMaterias.Add(m);
+                    }
+                    esta = false;
+                }
+
+
+                return View(listaMaterias);
+
+            }
+            else
             {
                 return RedirectToAction("AccesoDenegado", "Accounts");
             }

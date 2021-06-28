@@ -78,6 +78,8 @@ namespace InstitutoEducativo.Controllers
         {
             if (ModelState.IsValid)
             {
+                var Legajo = "empl - " + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Second + _context.Empleados.Count();
+                empleado.Legajo = Legajo;
                 empleado.Id = Guid.NewGuid();
                 empleado.FechaAlta = DateTime.Today;
                 empleado.UserName = empleado.Email;
