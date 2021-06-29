@@ -19,12 +19,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Descripcion)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CupoMaximo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Carrera)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -39,14 +33,7 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CupoMaximo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Carrera.Nombre)
-            </td>
-            
+            </td>            
         </tr>
 }
     </tbody>
