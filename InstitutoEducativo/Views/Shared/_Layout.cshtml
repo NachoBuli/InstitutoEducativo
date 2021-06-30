@@ -71,10 +71,13 @@
                             @if (User.IsInRole("Profesor"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Calificaciones" asp-action="Index">Calificaciones</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Calificaciones" asp-action="Index">Mis Calificaciones</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Profesores" asp-action="ListarMateriasCursadas">Materias</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Profesores" asp-action="MisMaterias">Mis Materias</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Profesores" asp-action="MisAlumnos">Mis Alumnos</a>
                                 </li>
 
                             }

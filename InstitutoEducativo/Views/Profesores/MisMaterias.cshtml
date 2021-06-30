@@ -1,0 +1,39 @@
+﻿@model IEnumerable<InstitutoEducativo.Models.Materia>
+
+@{
+    ViewData["Title"] = "MisMaterias";
+}
+
+
+<h1>Mis Materias en curso</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td>
+                    <a class="btn btn-outline-secondary" asp-controller="Materias" asp-action="Details" asp-route-id="@item.MateriaId">Detalles</a>
+                    <a class="btn btn-outline-secondary" asp-controller="Profesores" asp-action="ListarMateriasCursadas" asp-route-id="@item.MateriaId">Ver Cursos</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

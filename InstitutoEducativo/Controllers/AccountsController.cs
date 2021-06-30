@@ -234,5 +234,97 @@ namespace InstitutoEducativo.Controllers
             return View(model: returnurl);
         }
 
+        public async Task<IActionResult> LlenarConDatos()
+        {
+
+            if (_miContexto.Carreras.FirstOrDefault(c => c.Nombre == "Analisis De Sistemas") == null)
+            {
+                var contraseña = "Password1";
+                var NameA = "Alumno";
+                var NameP = "Profesor";
+                var NameE = "Empleado";
+
+                Carrera carrera = new Carrera
+                {
+                    CarreraId = Guid.NewGuid(),
+                    Nombre = "Analisis De Sistemas"
+
+                };
+                _miContexto.Carreras.Add(carrera);
+                _miContexto.SaveChanges();
+
+                Persona profesor = new Profesor
+                {
+                    Id = Guid.NewGuid(),
+                    Nombre = "profesor",
+                    UserName = "profesor@profesor.com",
+                    Email = "profesor@profesor.com",
+                    Direccion = "Avenida Libertador, Buenos Aires",
+                    Telefono = "1122345678",
+                    Dni = "12345621",
+                    Apellido = "profe",
+                    FechaAlta = DateTime.Now,
+                    Legajo = "Profesor-12346"
+                };
+
+                Persona alumno = new Alumno
+                {
+                    Id = Guid.NewGuid(),
+                    Nombre = "alumno",
+                    UserName = "alumno@alumno.com",
+                    Email = "alumno@alumno.com",
+                    CarreraId = carrera.CarreraId,
+                    Carrera = carrera,
+                    Direccion = "Laprida, Buenos Aires",
+                    Telefono = "1122345678",
+                    Dni = "12335621",
+                    Apellido = "Alu",
+                    FechaAlta = DateTime.Now,
+                    Activo = true,
+                    NumeroMatricula = 12345,
+
+
+                };
+
+                Persona empleado = new Empleado
+                {
+                    Id = Guid.NewGuid(),
+                    Nombre = "empleado",
+                    UserName = "empleado@empleado.com",
+                    Email = "empleado@empleado.com",
+                    Direccion = "Aguero, Buenos Aires",
+                    Telefono = "1122845678",
+                    Dni = "17335621",
+                    Apellido = "Empl",
+                    FechaAlta = DateTime.Now,
+                    Legajo = "Empleado-12345"
+                };
+
+
+
+                var resultadoRegistracionA = await _userManager.CreateAsync(alumno, contraseña);
+                var resultadoRegistracionP = await _userManager.CreateAsync(profesor, contraseña);
+                var resultadoRegistracionE = await _userManager.CreateAsync(empleado, contraseña);
+
+                var resuAddToRoleA = await _userManager.AddToRoleAsync(alumno, NameA);
+                var resuAddToRoleP = await _userManager.AddToRoleAsync(profesor, NameP);
+                var resuAddToRoleE = await _userManager.AddToRoleAsync(empleado, NameE);
+
+
+
+
+                ViewData["Mensaje"] = "La base de datos tiene datos, puede continuar";
+
+                return View("IniciarSesion");
+
+            }
+
+            ViewData["Err"] = "No puede Llenar la base dos veces";
+            return View("IniciarSesion");
+
+
+
+        }
+
     }
 }

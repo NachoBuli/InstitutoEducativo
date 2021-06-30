@@ -1,10 +1,12 @@
 ﻿@model IEnumerable<InstitutoEducativo.ViewModels.MateriaCursadaConNotaPromedio>
 
+
+
 @{
     ViewData["Title"] = "ListarMateriasCursadas";
 }
 
-<h1>Materias Cursadas Activas</h1>
+<h1>Mis Materias Cursadas de @ViewData["NombreMateria"]</h1>
 
 
 <table class="table">
@@ -25,34 +27,36 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Anio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cuatrimestre)
-            </td>
-            <td>
-                @if (Double.IsNaN(item.NotaPromedio))
-                {
-                    @Html.Raw("Sin Calificaciónes")
-                }
-                else
-                {
-                    @Html.DisplayFor(modelItem => item.NotaPromedio)
-                }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Anio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cuatrimestre)
+                </td>
+                <td>
+                    @if (Double.IsNaN(item.NotaPromedio))
+                    {
+                        @Html.Raw("Sin Calificaciónes")
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.NotaPromedio)
+                    }
 
-  
-            </td>
 
-            <td>
-                <a class="btn btn-outline-secondary" asp-controller="Profesores" asp-action="MostrarAlumnosPorMateriaCursada" asp-route-id="@item.materiaCursadaId">Mostrar alumnos</a>
-            </td>
-        </tr>
-}
+                </td>
+
+                <td>
+                    <a class="btn btn-outline-secondary" asp-controller="MateriaCursadas" asp-action="Details" asp-route-id="@item.materiaCursadaId">Detalles</a>
+                    <a class="btn btn-outline-secondary" asp-controller="Profesores" asp-action="MostrarAlumnosPorMateriaCursada" asp-route-id="@item.materiaCursadaId">Mostrar alumnos</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

@@ -11,12 +11,13 @@ namespace InstitutoEducativo.Data
     {
         private readonly UserManager<Persona> _userManager;
         private readonly RoleManager<Rol> _rolManager;
+        private DbContextInstituto _context;
 
-        public DbInicializador(UserManager<Persona> userManager, RoleManager<Rol> roleManager)
+        public DbInicializador(UserManager<Persona> userManager, RoleManager<Rol> roleManager, DbContextInstituto context)
         {
             _userManager = userManager;
             _rolManager = roleManager;
-
+            _context = context;
         }
 
         public async void Seed()
@@ -52,11 +53,15 @@ namespace InstitutoEducativo.Data
 
             }
 
+         
+
+
 
         }
         private async void IniciarRol(string nombre)
         {
             _rolManager.CreateAsync(new Rol() { Name = nombre }).Wait();
         }
+
     }
 }

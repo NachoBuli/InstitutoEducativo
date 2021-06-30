@@ -42,7 +42,16 @@
         </dd>
     </dl>
 </div>
-<div>
+
+    @if (User.IsInRole("Empleado"))
+    {<div>
+
     <a asp-action="Edit" asp-route-id="@Model.MateriaId">Editar</a> |
     <a asp-action="Index">Volver a Materias</a>
+
 </div>
+}
+
+
+
+

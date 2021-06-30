@@ -6,9 +6,9 @@
 
 <div class="bg-danger">@TempData["Message"]</div>
 
-<h1>Mis Materias en Curso</h1>
+<h1>Mis Materias Finalizadas</h1>
 
-<a class="btn btn-outline-secondary" asp-controller="Alumnos" asp-action="MisMateriasFinalizadas" asp-route-id="">Ver Materias Finalizadas</a>
+<a class="btn btn-outline-secondary" asp-controller="Alumnos" asp-action="MisMaterias" asp-route-id="">Ver Materias En Curso</a>
 <table class="table">
     <thead>
         <tr>
@@ -35,7 +35,6 @@
                 </td>
                 <td>
                     <a class="btn btn-outline-secondary" asp-controller="MateriaCursadas" asp-action="Details" asp-route-id="@item.MateriaCursadaId">Detalle</a>
-                    <a class="btn btn-outline-secondary" asp-controller="Alumnos" asp-action="CancelarInscripcion" asp-route-id="@item.MateriaCursadaId">Cancelar Inscripción</a>
                 </td>
             </tr>
         }

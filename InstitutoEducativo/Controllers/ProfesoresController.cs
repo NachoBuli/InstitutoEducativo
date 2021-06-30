@@ -53,15 +53,16 @@ namespace InstitutoEducativo.Controllers
             return View(profesor);
         }
 
-        public async Task<IActionResult> ListarMateriasCursadas()
+        public async Task<IActionResult> ListarMateriasCursadas(Guid? Id)
         {
             Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
             List <MateriaCursadaConNotaPromedio> listaMateriasActivasPorProfesor = new List <MateriaCursadaConNotaPromedio>();
             List<int> promedios = new List<int>();
             var materiaCursadas = _context.MateriaCursadas
                 .Include(mc => mc.Calificaciones);
-          
-          
+
+            var Materia = _context.Materias.FirstOrDefault(m => m.MateriaId == Id);
+            ViewData["NombreMateria"] = Materia.Nombre;
 
             if (materiaCursadas == null)
             {
@@ -73,7 +74,7 @@ namespace InstitutoEducativo.Controllers
             {
                 foreach (MateriaCursada mc in materiaCursadas)
                 {
-                    if (mc.ProfesorId == profesor.Id && mc.Activo)
+                    if (mc.ProfesorId == profesor.Id && mc.Activo && mc.MateriaId == Id)
                     {
                         MateriaCursadaConNotaPromedio mcp = new MateriaCursadaConNotaPromedio
                         {
@@ -104,6 +105,7 @@ namespace InstitutoEducativo.Controllers
                 .ThenInclude(amc => amc.Calificacion)
                 .FirstOrDefault(mc => mc.MateriaCursadaId == id);
 
+            ViewData["MateriaCursadaNombre"] = materiaCursada.Nombre;
             
             return View(materiaCursada.AlumnoMateriaCursadas);
         }
@@ -288,6 +290,40 @@ namespace InstitutoEducativo.Controllers
             promedio = Math.Round(promedio, 2, MidpointRounding.AwayFromZero);
 
             return View("ListarMateriasCursadas", promedio);
+        }
+        public async Task<IActionResult> MisMaterias()
+        {
+            Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
+            var materiasCursadas = _context.MateriaCursadas
+                .Include(mc => mc.Materia)
+                .Where(mc => mc.ProfesorId == profesor.Id);
+             List<Materia> materias = new List<Materia>();
+            foreach (MateriaCursada mc in materiasCursadas)
+            {
+                
+                if (materias.FirstOrDefault(m => m.MateriaId == mc.MateriaId) == null && mc.Activo)
+                {
+                    materias.Add(mc.Materia);
+                }
+            }
+
+            return View(materias);
+        }
+
+        public async Task<IActionResult> MisAlumnos()
+        {
+            Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
+            var ListaMateriasCursadas = _context.MateriaCursadas
+                .Include(mc => mc.Materia)
+                .Include(mc => mc.AlumnoMateriaCursadas)
+                .ThenInclude(amc => amc.Alumno)
+                .Include(mc => mc.AlumnoMateriaCursadas)
+                .ThenInclude(amc => amc.Calificacion)
+                .Where(mc => mc.ProfesorId == profesor.Id).OrderBy(mc => mc.MateriaId).ThenBy(mc => mc.MateriaCursadaId);
+
+            return View(ListaMateriasCursadas);
+
+  
         }
     }
 }

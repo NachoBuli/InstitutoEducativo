@@ -486,7 +486,8 @@ namespace InstitutoEducativo.Controllers
             return View(alumnosMateriasCursadas);
         }
 
-        [Authorize(Roles= "Alumno")]
+       
+
         public async Task<IActionResult> MisMaterias()
         {
             var alumnoid = Guid.Parse(_userManager.GetUserId(User));
@@ -562,7 +563,29 @@ namespace InstitutoEducativo.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Alumno")]
+        public async Task<IActionResult> MisMateriasFinalizadas()
+        {
+            var alumnoid = Guid.Parse(_userManager.GetUserId(User));
+            var Alumno = _context.Alumnos
+                .Include(a => a.AlumnosMateriasCursadas)
+                .ThenInclude(amc => amc.MateriaCursada)
+                .ThenInclude(mc => mc.Materia)
+                .FirstOrDefault(a => a.Id == alumnoid);
+            var alumnoMateriasCursadas = Alumno.AlumnosMateriasCursadas;
+            var amcInActivos = new List<AlumnoMateriaCursada>();
+            foreach (AlumnoMateriaCursada amc in alumnoMateriasCursadas)
+            {
+                if (!amc.MateriaCursada.Activo)
+                {
+                    amcInActivos.Add(amc);
+                }
+            }
+            return View(amcInActivos);
+        }
     }
+
+
 
 
 

@@ -8,5 +8,6 @@ namespace InstitutoEducativo.Data
     interface IDbInicializador
     {
         public void Seed();
+       
     }
 }

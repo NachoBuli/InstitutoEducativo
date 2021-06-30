@@ -32,7 +32,7 @@ namespace InstitutoEducativo.Controllers
                 .Include(c => c.AlumnoMateriaCursada)
                 .ThenInclude(amc => amc.Alumno)
                 .Include(c => c.Materia)
-                .Where(c => c.ProfesorId == profesor.Id && c.NotaFinal != -1111);
+                .Where(c => c.ProfesorId == profesor.Id && c.NotaFinal != -1111).OrderBy(c => c.Materia.MateriaId).ThenBy(c => c.AlumnoMateriaCursada.MateriaCursadaId);
 
             return View(calificaciones);
         }
@@ -119,6 +119,7 @@ namespace InstitutoEducativo.Controllers
                 TempData["Message"] = "Entra un valor entre 0 y 10";
                 return RedirectToAction("Edit");
             }
+
 
             Calificacion c = _context.Calificaciones
                 .Include(c => c.AlumnoMateriaCursada)
