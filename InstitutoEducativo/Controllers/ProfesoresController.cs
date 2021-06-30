@@ -114,6 +114,8 @@ namespace InstitutoEducativo.Controllers
         // GET: Profesores/Create
         public IActionResult Create()
         {
+            TempData["Message"] = "Se otorga una contraseña por sistema la cual es 'Password1'.";
+
             return View();
         }
 
@@ -127,11 +129,13 @@ namespace InstitutoEducativo.Controllers
         {
             if (ModelState.IsValid)
             {
+                var contrasenia = "Password1";
                 var Legajo = "prof - " + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Second + _context.Empleados.Count();
                 profesor.Legajo = Legajo;
                 profesor.Id = Guid.NewGuid();
                 profesor.FechaAlta = DateTime.Today;
                 profesor.UserName = profesor.Email;
+                profesor.PasswordHash = contrasenia;
 
                 var resultado = await _userManager.CreateAsync(profesor, profesor.PasswordHash);
                 if (resultado.Succeeded)

@@ -65,6 +65,8 @@ namespace InstitutoEducativo.Controllers
         // GET: Empleados/Create
         public IActionResult Create()
         {
+            TempData["Message"] = "Se otorga una contraseña por sistema la cual es 'Password1'.";
+
             return View();
         }
 
@@ -78,11 +80,13 @@ namespace InstitutoEducativo.Controllers
         {
             if (ModelState.IsValid)
             {
+                var contrasenia = "Password1";
                 var Legajo = "empl - " + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Second + _context.Empleados.Count();
                 empleado.Legajo = Legajo;
                 empleado.Id = Guid.NewGuid();
                 empleado.FechaAlta = DateTime.Today;
                 empleado.UserName = empleado.Email;
+                empleado.PasswordHash = contrasenia;
                 
                 var resultado = await _userManager.CreateAsync(empleado, empleado.PasswordHash);
                 if (resultado.Succeeded)

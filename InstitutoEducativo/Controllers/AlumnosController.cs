@@ -57,6 +57,7 @@ namespace InstitutoEducativo.Controllers
         //[Authorize (Roles = "Empleado")]
         public IActionResult Create()
         {
+            TempData["Message"] = "Se otorga una contraseña por sistema la cual es 'Password1'.";
             ViewData["CarreraId"] = new SelectList(_context.Carreras, "CarreraId", "Nombre");
             return View();
         }
@@ -71,6 +72,8 @@ namespace InstitutoEducativo.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                var contrasenia = "Password1";
                 var Alumnos = _context.Alumnos;
                 var MatriculaMax = 0;
 
@@ -92,6 +95,7 @@ namespace InstitutoEducativo.Controllers
                 }
 
                 MatriculaMax = MatriculaMax + 1;
+                alumno.PasswordHash = contrasenia;
 
                 var resultado = await _userManager.CreateAsync(alumno, alumno.PasswordHash);
                 if (resultado.Succeeded)
