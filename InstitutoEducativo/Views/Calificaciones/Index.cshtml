@@ -4,16 +4,13 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Calificaciones</h1>
+<h1>Mis Calificaciones</h1>
 
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.NotaFinal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Profesor)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Alumno.Nombre)
@@ -32,9 +29,6 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.NotaFinal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Profesor.Apellido)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Alumno.Nombre)

@@ -135,7 +135,9 @@ namespace InstitutoEducativo.Controllers
             }
 
             c.NotaFinal = NotaFinal;
-            profesor.CalificacionesRealizadas.Add(c);
+            c.ProfesorId = profesor.Id;
+            c.Profesor = profesor;
+            //profesor.CalificacionesRealizadas.Add(c);
             if (ModelState.IsValid)
             {
                 try
