@@ -315,7 +315,7 @@ namespace InstitutoEducativo.Controllers
                         cont++;
                     }
                 }
-                if (cont >= 5)
+                if (cont > 5)
                 {
                     TempData["message"] = "No podes inscribirte en mas de 5 materias";
                     return RedirectToAction("RegistrarMaterias", "Alumnos");

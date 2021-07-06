@@ -58,6 +58,8 @@ namespace InstitutoEducativo.Data
 
         }
 
+        public DbSet<InstitutoEducativo.ViewModels.MisMateriasConNotaPromedio> MisMateriasConNotaPromedio { get; set; }
+
        
     }
 

@@ -1,38 +1,55 @@
-﻿@model IEnumerable<InstitutoEducativo.Models.Materia>
+﻿@model IEnumerable<InstitutoEducativo.ViewModels.MisMateriasConNotaPromedio>
 
 @{
     ViewData["Title"] = "MisMaterias";
 }
 
+<h1>Mis Materias</h1>
 
-<h1>Mis Materias en curso</h1>
+<p>
 
+</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
+                @Html.DisplayNameFor(model => model.materia.Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
+                @Html.DisplayNameFor(model => model.materia.Descripcion)
             </th>
-            <th></th>
+            <th>
+                @Html.Raw("Nota Promedio")
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
+            <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
+                    @Html.DisplayFor(modelItem => item.materia.Nombre)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Descripcion)
+                    @Html.DisplayFor(modelItem => item.materia.Descripcion)
                 </td>
                 <td>
-                    <a class="btn btn-outline-secondary" asp-controller="Materias" asp-action="Details" asp-route-id="@item.MateriaId">Detalles</a>
-                    <a class="btn btn-outline-secondary" asp-controller="Profesores" asp-action="ListarMateriasCursadas" asp-route-id="@item.MateriaId">Ver Cursos</a>
+                    @if (item.promedioMateria == -1111)
+                    {
+                        @Html.Raw("Sin Calificaciones")
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.promedioMateria)
+                    }
+
                 </td>
+                <td>
+                    <a class="btn btn-outline-secondary" asp-controller="Materias" asp-action="Details" asp-route-id="@item.materia.MateriaId">Detalles</a>
+                    <a class="btn btn-outline-secondary" asp-controller="Profesores" asp-action="ListarMateriasCursadas" asp-route-id="@item.materia.MateriaId">Ver Cursos</a>
+                </td>
+            </tr>
             </tr>
         }
     </tbody>

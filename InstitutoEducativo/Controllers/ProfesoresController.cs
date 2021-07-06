@@ -300,18 +300,25 @@ namespace InstitutoEducativo.Controllers
             Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
             var materiasCursadas = _context.MateriaCursadas
                 .Include(mc => mc.Materia)
-                .Where(mc => mc.ProfesorId == profesor.Id);
-             List<Materia> materias = new List<Materia>();
+                .ThenInclude(m => m.Calificaciones)
+                .Where(mc => mc.ProfesorId == profesor.Id && mc.Activo);
+             List<MisMateriasConNotaPromedio> materiasConPromedio = new List<MisMateriasConNotaPromedio>();
+        
             foreach (MateriaCursada mc in materiasCursadas)
             {
                 
-                if (materias.FirstOrDefault(m => m.MateriaId == mc.MateriaId) == null && mc.Activo)
+                if (materiasConPromedio.FirstOrDefault(mcp => mcp.materia.MateriaId == mc.MateriaId) == null)
                 {
-                    materias.Add(mc.Materia);
+                    var newMcp = new MisMateriasConNotaPromedio
+                    {
+                        materia = mc.Materia
+                    };
+                    
+                    materiasConPromedio.Add(newMcp);
                 }
             }
 
-            return View(materias);
+            return View(materiasConPromedio);
         }
 
         public async Task<IActionResult> MisAlumnos()
