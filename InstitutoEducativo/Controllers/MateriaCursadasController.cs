@@ -64,9 +64,15 @@ namespace InstitutoEducativo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MateriaCursadaId,Nombre,Anio,Cuatrimestre,Activo,MateriaId,ProfesorId")] MateriaCursada materiaCursada)
         {
+            var materia = _context.Materias.
+                Include(m => m.MateriasCursadas).
+                FirstOrDefault(m => m.MateriaId == materiaCursada.MateriaId);
+
             if (ModelState.IsValid)
             {
+              
                 materiaCursada.MateriaCursadaId = Guid.NewGuid();
+                materiaCursada.Nombre = materia.Nombre + " - " + (materia.MateriasCursadas.Count + 1) + ", " + DateTime.Now.Year + "- cuatrimestre " + materiaCursada.Cuatrimestre;
                 _context.Add(materiaCursada);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

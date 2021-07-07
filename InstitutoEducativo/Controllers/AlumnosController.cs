@@ -370,7 +370,7 @@ namespace InstitutoEducativo.Controllers
                                 Activo = true,
                                 Materia = firstMateriaCursada.Materia,
                                 ProfesorId = firstMateriaCursada.ProfesorId,
-                                Nombre = materia.Nombre + firstMateriaCursada.Anio.ToString() + materia.MateriasCursadas.Count.ToString(),
+                                Nombre = materia.Nombre + " - " + (materia.MateriasCursadas.Count + 1) + ", " + DateTime.Now.Year + "- cuatrimestre " + firstMateriaCursada.Cuatrimestre,
                                 Calificaciones = new List<Calificacion>()
                             };
                             _context.MateriaCursadas.Add(materiaCursadaLibre);

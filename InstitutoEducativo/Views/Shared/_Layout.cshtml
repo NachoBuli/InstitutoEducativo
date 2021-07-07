@@ -20,15 +20,6 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Profesores" asp-action="MostrarProfesores">Nuestros Profesores</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Carreras" asp-action="MostrarCarreras">Info Carreras</a>
-                        </li>
                         @if (signInManager.IsSignedIn(User))
                         {
                             @if (User.IsInRole("Alumno"))
@@ -45,7 +36,7 @@
                             }
                             if (User.IsInRole("Empleado"))
                             {
-                              
+
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Carreras" asp-action="Index">Carrera</a>
                                 </li>
@@ -81,25 +72,34 @@
                             }
 
                         }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Profesores" asp-action="MostrarProfesores">Nuestros Profesores</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Carreras" asp-action="MostrarCarreras">Info Carreras</a>
+                            </li>
+                        }
 
 
 
-                        <li>
+                        <ul class="navbar-nav ml-auto">
                             @if (signInManager.IsSignedIn(User))
                             {
-                                <span class="text-danger">@User.Identity.Name</span>
-                                <a asp-action="CerrarSesion" asp-controller="Accounts"> Cerrar Sesion</a>
+                                <span class="text-black-50">@User.Identity.Name</span>
+                                <a class="btn btn-outline-dark" asp-action="CerrarSesion" asp-controller="Accounts"> Cerrar</a>
                             }
                             else
                             {
-                                <a asp-action="IniciarSesion" asp-controller="Accounts"> Iniciar Sesion</a>
-                                <a asp-action="Registrar" asp-controller="Accounts"> Registrarse</a>
+                                <a class="btn btn-outline-success" asp-action="IniciarSesion" asp-controller="Accounts"> Iniciar</a>
+                                <a class="btn btn-secondary" asp-action="Registrar" asp-controller="Accounts"> Registrarse</a>
                             }
 
-
-
-
-                        </li>
+                        </ul>
                     </ul>
                 </div>
             </div>
