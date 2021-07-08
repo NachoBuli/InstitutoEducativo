@@ -55,7 +55,7 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles =("Empleado"))]
+        [Authorize(Roles =("Empleado"))]
         public async Task<IActionResult> Create([Bind("CarreraId,Nombre")] Carrera carrera)
         {
             if (ModelState.IsValid)

@@ -269,6 +269,7 @@ namespace InstitutoEducativo.Controllers
             
         }
         //[HttpPost, ActionName("AgregarMateria")]
+        [Authorize(Roles ="Alumno")]
         public async Task<IActionResult> AgregarMateriaMostrar (Guid? id)
         {
             if (id == null)
@@ -285,6 +286,7 @@ namespace InstitutoEducativo.Controllers
             return View(materia);
         }
 
+        [Authorize(Roles ="Alumno")]
         public async Task<IActionResult> AgregarMateria(Guid? id)
         {
             if (id == null)
@@ -491,8 +493,8 @@ namespace InstitutoEducativo.Controllers
             return View(alumnosMateriasCursadas);
         }
 
-       
 
+        [Authorize(Roles = "Alumno")]
         public async Task<IActionResult> MisMaterias()
         {
             var alumnoid = Guid.Parse(_userManager.GetUserId(User));

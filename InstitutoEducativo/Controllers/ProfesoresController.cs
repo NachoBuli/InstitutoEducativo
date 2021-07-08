@@ -53,6 +53,7 @@ namespace InstitutoEducativo.Controllers
             return View(profesor);
         }
 
+        [Authorize(Roles ="Profesor")]
         public async Task<IActionResult> ListarMateriasCursadas(Guid? Id)
         {
             Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
@@ -90,7 +91,7 @@ namespace InstitutoEducativo.Controllers
         }
 
 
-
+        [Authorize(Roles ="Profesor")]
         public async Task<IActionResult> MostrarAlumnosPorMateriaCursada(Guid? id) // esta bien
         {
             if (id == null)
@@ -295,6 +296,8 @@ namespace InstitutoEducativo.Controllers
 
             return View("ListarMateriasCursadas", promedio);
         }
+
+        [Authorize(Roles ="Profesor")]
         public async Task<IActionResult> MisMaterias()
         {
             Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
@@ -321,6 +324,7 @@ namespace InstitutoEducativo.Controllers
             return View(materiasConPromedio);
         }
 
+        [Authorize(Roles ="Profesor")]
         public async Task<IActionResult> MisAlumnos()
         {
             Profesor profesor = (Profesor)await _userManager.GetUserAsync(HttpContext.User);
