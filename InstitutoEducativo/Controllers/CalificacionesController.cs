@@ -83,6 +83,7 @@ namespace InstitutoEducativo.Controllers
         }
         //authorize
         // GET: Calificaciones/Edit/5
+        [Authorize(Roles = "Profesor")]
         public IActionResult Edit(Guid? id) //validaciones
         {
             if (id == null)

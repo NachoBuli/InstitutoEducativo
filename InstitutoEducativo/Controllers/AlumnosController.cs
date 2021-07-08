@@ -67,7 +67,7 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
        [HttpPost]
        [ValidateAntiForgeryToken]
-       //[Authorize(Roles ="Empleado")]
+       [Authorize(Roles ="Empleado")]
         public async Task<IActionResult> Create([Bind("Activo,NumeroMatricula,FechaAlta,CarreraId,Nombre,Apellido,Dni,Telefono,Direccion,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Alumno alumno)
         {
             if (ModelState.IsValid)
@@ -125,6 +125,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         //GET: Alumnos/Edit/5
+        [Authorize(Roles = "Empleado")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
