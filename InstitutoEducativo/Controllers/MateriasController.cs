@@ -63,9 +63,24 @@ namespace InstitutoEducativo.Controllers
         {
             if (ModelState.IsValid)
             {
+                foreach (var m in _context.Materias)
+                {
+                    if(m.Nombre.ToLower() == materia.Nombre.ToLower())
+                    {
+                        TempData["Message"] = "Ya existe una materia con el nombre '" + materia.Nombre + "'";
+                        ViewData["CarreraId"] = new SelectList(_context.Carreras, "CarreraId", "Nombre");
+                        return View();
+                    }
+                    if(m.CodigoMateria.ToLower() == materia.CodigoMateria.ToLower())
+                    {
+                        TempData["Message"] = "Ya existe una materia con el codigo '" + materia.CodigoMateria + "'";
+                        ViewData["CarreraId"] = new SelectList(_context.Carreras, "CarreraId", "Nombre");
+                        return View();
+                    }
+                }
+
                 materia.MateriaId = Guid.NewGuid();
                 var carrera = await _context.Carreras.FindAsync(materia.CarreraId);
-      
                 _context.Add(materia);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
