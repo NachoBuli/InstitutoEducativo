@@ -90,8 +90,10 @@
                         <ul class="navbar-nav ml-auto">
                             @if (signInManager.IsSignedIn(User))
                             {
-                                <span class="text-black-50">@User.Identity.Name</span>
+                               
+                                <span class="text-black-50">@User.Identity.Name </span>
                                 <a class="btn btn-outline-dark" asp-action="CerrarSesion" asp-controller="Accounts"> Cerrar</a>
+                                
                             }
                             else
                             {

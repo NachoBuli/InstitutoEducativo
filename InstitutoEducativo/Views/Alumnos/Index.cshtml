@@ -4,7 +4,8 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+<div class="bg-danger">@TempData["MensajeFalla"]</div>
+<div class="bg-success">@TempData["MensajeExito"]</div>
 <h1>Alumnos</h1>
 
 <p>
@@ -55,15 +56,16 @@
             {
                 @if (User.IsInRole("Empleado"))
                 {
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Detalles</a> 
-                        <a class="text-hide" asp-action="Delete" asp-route-id="@item.Id">Eliminar</a> 
-                        @if(item.Activo == false)
-                        {
-                    <a asp-action="ActivarAlumno" asp-route-id="@item.Id">| Activar alumno</a>
-                        }
-                    </td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+            <a asp-action="Details" asp-route-id="@item.Id">Detalles</a> |
+            <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+
+            @if (item.Activo == false)
+            {
+                <a asp-action="ActivarAlumno" asp-route-id="@item.Id">| Activar alumno</a>
+            }
+        </td>
                 }
             }
         </tr>

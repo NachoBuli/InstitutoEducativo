@@ -30,7 +30,11 @@ namespace InstitutoEducativo.Controllers
         // GET: Alumnos
         public async Task<IActionResult> Index()
         {
-            var dbContextInstituto = _context.Alumnos.Include(a => a.Carrera);
+            
+            var dbContextInstituto = _context.Alumnos
+                .Include(a=> a.AlumnosMateriasCursadas)
+                .ThenInclude(amc => amc.Calificacion)
+                .Include(a => a.Carrera);
             return View(await dbContextInstituto.ToListAsync());
         }
 
@@ -187,10 +191,11 @@ namespace InstitutoEducativo.Controllers
             {
                 return NotFound();
             }
-
+            
             var alumno = await _context.Alumnos
                 .Include(a => a.Carrera)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (alumno == null)
             {
                 return NotFound();
@@ -204,9 +209,45 @@ namespace InstitutoEducativo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var alumno = await _context.Alumnos.FindAsync(id);
-            _context.Alumnos.Remove(alumno);
-            await _context.SaveChangesAsync();
+            var alumno = await _context.Alumnos
+                .Include(a=> a.AlumnosMateriasCursadas)
+                .ThenInclude(amc=>amc.Calificacion)
+                .Include(a => a.Carrera)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var tieneCalificacion = false;
+
+            foreach (AlumnoMateriaCursada amc in alumno.AlumnosMateriasCursadas)
+            {
+                if(amc.Calificacion.NotaFinal != -1111)
+                {
+                     tieneCalificacion = true;
+                    break;
+                }
+            }
+          
+            if(!tieneCalificacion || alumno.AlumnosMateriasCursadas == null)
+            {
+                if(alumno.AlumnosMateriasCursadas!= null)
+                {
+                    foreach(AlumnoMateriaCursada amc in alumno.AlumnosMateriasCursadas)
+                    {
+                        _context.Calificaciones.Remove(amc.Calificacion);
+                       // _context.AlumnoMateriaCursadas.Remove(amc);
+                        
+                    }
+                }
+                _context.SaveChanges();
+                _context.Alumnos.Remove(alumno);
+                await _context.SaveChangesAsync();
+                TempData["MensajeExito"] = "El alumno esta eliminado con exito";
+            }
+            else
+            {
+
+                TempData["MensajeFalla"] = "El alumno tiene una calificacion asociada no podes eliminar el alumno";
+            }
+           
             return RedirectToAction(nameof(Index));
         }
 
