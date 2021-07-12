@@ -45,8 +45,10 @@
             </td>
 
             <td>
-           
-                <a class="btn btn-outline-secondary" asp-controller="Calificaciones" asp-action="Edit" asp-route-id="@item.CalificacionId">Dar Calificacion</a>
+                @if (item.MateriaCursada.Activo)
+                {
+                    <a class="btn btn-outline-secondary" asp-controller="Calificaciones" asp-action="Edit" asp-route-id="@item.CalificacionId">Dar Calificacion</a>}
+
             </td>
 
         </tr>

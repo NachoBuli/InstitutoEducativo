@@ -60,6 +60,8 @@ namespace InstitutoEducativo.Data
 
         public DbSet<InstitutoEducativo.ViewModels.MisMateriasConNotaPromedio> MisMateriasConNotaPromedio { get; set; }
 
+        public DbSet<InstitutoEducativo.ViewModels.MateriaCursadaConNotaPromedio> MateriaCursadaConNotaPromedio { get; set; }
+
        
     }
 

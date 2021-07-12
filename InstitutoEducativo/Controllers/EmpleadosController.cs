@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace InstitutoEducativo.Controllers
 {
+    [Authorize]
     public class EmpleadosController : Controller
     {
         private readonly DbContextInstituto _context;
@@ -28,6 +29,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Empleados
+        [Authorize(Roles = "Empleado")]
         public IActionResult Index()
         {
             var Empleados = _context.Empleados;
@@ -45,6 +47,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Empleados/Details/5
+        [Authorize(Roles = "Empleado")]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -63,6 +66,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Empleados/Create
+        [Authorize(Roles = "Empleado")]
         public IActionResult Create()
         {
             TempData["Message"] = "Se otorga una contraseña por sistema la cual es 'Password1'.";
@@ -115,6 +119,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Empleados/Edit/5
+        [Authorize(Roles = "Empleado")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -167,34 +172,34 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Empleados/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Delete(Guid? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var empleado = await _context.Empleados
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (empleado == null)
-            {
-                return NotFound();
-            }
+        //    var empleado = await _context.Empleados
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (empleado == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(empleado);
-        }
+        //    return View(empleado);
+        //}
 
         // POST: Empleados/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var empleado = await _context.Empleados.FindAsync(id);
-            _context.Empleados.Remove(empleado);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(Guid id)
+        //{
+        //    var empleado = await _context.Empleados.FindAsync(id);
+        //    _context.Empleados.Remove(empleado);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
+        [Authorize(Roles = "Empleado")]
         private bool EmpleadoExists(Guid id)
         {
             return _context.Empleados.Any(e => e.Id == id);

@@ -54,8 +54,35 @@ namespace InstitutoEducativo.Data
 
             }
             CreoDatos();
+            DesactivarMateriasCursadasCuatrimestre(8,1); // desactivar MateriasCursadas primer cuatrimestre
+            DesactivarMateriasCursadasCuatrimestre(1, 2); //desactivar MateriasCursadas segundo cuatrimestre
+
+          
 
 
+        }
+
+        private void DesactivarMateriasCursadasCuatrimestre (int mes, int cuatrimestre)
+        {
+
+            if (DateTime.Now.Month == mes)
+            {
+                if(_context.MateriaCursadas != null)
+                {
+                    foreach (MateriaCursada mc in _context.MateriaCursadas)
+                    {
+                        if(mc.Cuatrimestre == cuatrimestre)
+                        {
+                            mc.Activo = false;
+                            _context.Update(mc);
+
+                        }
+                     }
+                }
+               
+            }
+            _context.SaveChanges();
+               
         }
         private  void IniciarRol(string nombre)
         {
@@ -116,11 +143,17 @@ namespace InstitutoEducativo.Data
             _context.Carreras.Add(carrera);
             _context.SaveChanges();
 
-            crearMateria("Programacion", carrera, "p-01","codigo");
-            crearMateria("Ingles", carrera,"i-03", "English");
-            crearMateria("Programacion2",carrera,"p-02", "codigo");
-            crearMateria("Base De Datos", carrera, "b-01", "datos");
-            crearMateria("Base De Datos 2", carrera, "b-02", "datos");
+            crearMateria("Programacion", carrera, "p-01","codigo", 1);
+            crearMateria("Ingles", carrera,"i-03", "English",1);
+            crearMateria("Programacion2",carrera,"p-02", "codigo",1);
+            crearMateria("Base De Datos", carrera, "b-01", "datos",1);
+            crearMateria("Base De Datos 2", carrera, "b-02", "datos",1);
+
+            crearMateria("Programacion 3", carrera, "p-01", "codigo",2);
+            crearMateria("Ingles 2", carrera, "i-03", "English",2);
+            crearMateria("Estudios judaicos ", carrera, "p-02", "codigo",2);
+            crearMateria("Analisis y metodologia", carrera, "b-01", "datos",2);
+            crearMateria("Base De Datos 3", carrera, "b-02", "datos",2);
 
             Persona alumno = new Alumno
             {
@@ -172,7 +205,7 @@ namespace InstitutoEducativo.Data
             }
         }
 
-        private void crearMateria(string nombre, Carrera carrera, string codigo, string desc)
+        private void crearMateria(string nombre, Carrera carrera, string codigo, string desc, int cuatrimestre)
         {
 
             Materia materia = new Materia
@@ -191,9 +224,9 @@ namespace InstitutoEducativo.Data
             _context.Materias.Add(materia);
             _context.SaveChanges();
 
-            crearMateriaCursada(materia);
+            crearMateriaCursada(materia, cuatrimestre);
         }
-        private void crearMateriaCursada(Materia materia)
+        private void crearMateriaCursada(Materia materia, int cuatrimestre)
         {
             var profesor = _context.Profesores.FirstOrDefault(p => p.Nombre == "profesor");
             MateriaCursada materiaCursada = new MateriaCursada
@@ -201,7 +234,7 @@ namespace InstitutoEducativo.Data
                 MateriaCursadaId = Guid.NewGuid(),
                 Nombre = materia.Nombre + (materia.MateriasCursadas.Count + 1),
                 Anio = 1,
-                Cuatrimestre = 2,
+                Cuatrimestre = cuatrimestre,
                 Activo = true,
                 MateriaId = materia.MateriaId,
                 Materia = materia,

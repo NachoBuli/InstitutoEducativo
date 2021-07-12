@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace InstitutoEducativo.Controllers
 {
+    [Authorize(Roles = "Alumno, Empleado")]
     public class AlumnosController : Controller
     {
         private readonly DbContextInstituto _context;
@@ -28,6 +29,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Alumnos
+        [Authorize(Roles="Empleado")]
         public async Task<IActionResult> Index()
         {
             
@@ -38,7 +40,7 @@ namespace InstitutoEducativo.Controllers
             return View(await dbContextInstituto.ToListAsync());
         }
 
-        // GET: Alumnos/Details/5
+        [Authorize(Roles = "Empleado")]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -58,7 +60,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Alumnos/Create
-        //[Authorize (Roles = "Empleado")]
+        [Authorize (Roles = "Empleado")]
         public IActionResult Create()
         {
             TempData["Message"] = "Se otorga una contraseña por sistema la cual es 'Password1'.";
@@ -205,6 +207,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // POST: Alumnos/Delete/5
+        [Authorize(Roles = "Empleado")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
@@ -250,7 +253,7 @@ namespace InstitutoEducativo.Controllers
            
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize(Roles = "Empleado")]
         private bool AlumnoExists(Guid id)
         {
             return _context.Alumnos.Any(e => e.Id == id);
@@ -268,6 +271,7 @@ namespace InstitutoEducativo.Controllers
                 .ThenInclude(mc => mc.AlumnoMateriaCursadas)
                 .FirstOrDefaultAsync(c => carreraId == c.CarreraId);
             bool esta = false;
+            bool esActivo = false;
             //var materias = carrera.Materias;
             var listaMaterias = new List<Materia>();
             if (alumno.Activo == true)
@@ -276,6 +280,7 @@ namespace InstitutoEducativo.Controllers
                 {
                     foreach (MateriaCursada mc in m.MateriasCursadas)
                     {
+                        if (mc.Activo) { esActivo = true; }
                         foreach (AlumnoMateriaCursada amc in mc.AlumnoMateriaCursadas)
                         {
                             if (amc.AlumnoId == alumno.Id)
@@ -290,11 +295,12 @@ namespace InstitutoEducativo.Controllers
                         }
 
                     }
-                    if (!esta)
+                    if (!esta && esActivo)
                     {
                         listaMaterias.Add(m);
                     }
                     esta = false;
+                    esActivo = false;
                 }
 
 
@@ -619,12 +625,14 @@ namespace InstitutoEducativo.Controllers
                 .Include(a => a.AlumnosMateriasCursadas)
                 .ThenInclude(amc => amc.MateriaCursada)
                 .ThenInclude(mc => mc.Materia)
+                .Include(a => a.AlumnosMateriasCursadas)
+                .ThenInclude(amc => amc.Calificacion)
                 .FirstOrDefault(a => a.Id == alumnoid);
             var alumnoMateriasCursadas = Alumno.AlumnosMateriasCursadas;
             var amcInActivos = new List<AlumnoMateriaCursada>();
             foreach (AlumnoMateriaCursada amc in alumnoMateriasCursadas)
             {
-                if (!amc.MateriaCursada.Activo)
+                if (!amc.MateriaCursada.Activo && amc.Calificacion.NotaFinal != -1111)
                 {
                     amcInActivos.Add(amc);
                 }

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace InstitutoEducativo.Controllers
 {
+    [Authorize]
     public class MateriaCursadasController : Controller
     {
         private readonly DbContextInstituto _context;
@@ -21,6 +22,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: MateriaCursadas
+        [Authorize(Roles = "Empleado")]
         public async Task<IActionResult> Index()
         {
             var dbContextInstituto = _context.MateriaCursadas.Include(m => m.Materia).Include(m => m.Profesor);
@@ -28,6 +30,8 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: MateriaCursadas/Details/5
+
+
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -50,6 +54,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: MateriaCursadas/Create
+        [Authorize(Roles = "Empleado")]
         public IActionResult Create()
         {
             ViewData["MateriaId"] = new SelectList(_context.Materias, "MateriaId", "Nombre");
@@ -84,6 +89,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: MateriaCursadas/Edit/5
+        [Authorize(Roles = "Empleado")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -106,6 +112,7 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Empleado")]
         public async Task<IActionResult> Edit(Guid id, [Bind("MateriaCursadaId,Nombre,Anio,Cuatrimestre,Activo,MateriaId,ProfesorId")] MateriaCursada materiaCursada)
         {
             if (id != materiaCursada.MateriaCursadaId)
@@ -139,36 +146,36 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: MateriaCursadas/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Delete(Guid? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var materiaCursada = await _context.MateriaCursadas
-                .Include(m => m.Materia)
-                .Include(m => m.Profesor)
-                .FirstOrDefaultAsync(m => m.MateriaCursadaId == id);
-            if (materiaCursada == null)
-            {
-                return NotFound();
-            }
+        //    var materiaCursada = await _context.MateriaCursadas
+        //        .Include(m => m.Materia)
+        //        .Include(m => m.Profesor)
+        //        .FirstOrDefaultAsync(m => m.MateriaCursadaId == id);
+        //    if (materiaCursada == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(materiaCursada);
-        }
+        //    return View(materiaCursada);
+        //}
 
         // POST: MateriaCursadas/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var materiaCursada = await _context.MateriaCursadas.FindAsync(id);
-            _context.MateriaCursadas.Remove(materiaCursada);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(Guid id)
+        //{
+        //    var materiaCursada = await _context.MateriaCursadas.FindAsync(id);
+        //    _context.MateriaCursadas.Remove(materiaCursada);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
+        [Authorize(Roles = "Empleado")]
         private bool MateriaCursadaExists(Guid id)
         {
             return _context.MateriaCursadas.Any(e => e.MateriaCursadaId == id);

@@ -4,8 +4,9 @@
     ViewData["Title"] = "MisMaterias";
 }
 
-<h1>Mis Materias</h1>
-
+<h1>Mis Materias En Curso</h1>
+<a class="btn btn-outline-secondary" asp-controller="Profesores" asp-action="ListarMateriasCursadasFinalizadas" asp-route-id="">Ver Cursos Finalizados</a>
+<a class="btn btn-outline-secondary" asp-controller="Profesores" asp-action="MisMateriaFuturos" asp-route-id="">Ver Cursos futuros</a>
 <p>
 
 </p>

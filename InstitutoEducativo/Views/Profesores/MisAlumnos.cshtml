@@ -17,6 +17,9 @@
                 @Html.Raw("Curso")
             </th>
             <th>
+                @Html.Raw("Activo")
+            </th>
+            <th>
                 @Html.Raw("Nombre")
             </th>
             <th>
@@ -38,6 +41,16 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @if (item.Activo)
+                {
+                    @Html.Raw("Activo")
+                }
+                else
+                {
+                    @Html.Raw("Inactivo")
+                }
             </td>
             <td>
                 @foreach (var alumno in item.AlumnoMateriaCursadas)
@@ -74,7 +87,7 @@
                     {
 
                         <div>Sin Calificacion</div>
-                    @*<div>
+                        @*<div>
                         <a class="btn btn-outline-secondary" asp-controller="Calificaciones" asp-action="Edit" asp-route-id="@alumno.CalificacionId">Dar Calificaciones</a>
                     </div>*@
 
@@ -83,7 +96,7 @@
 
                 }
             </td>
-           
+
 
         </tr>
 }

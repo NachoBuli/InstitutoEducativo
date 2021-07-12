@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace InstitutoEducativo.Controllers
 {
+    [Authorize]
     public class CarrerasController : Controller
     {
         private readonly DbContextInstituto _context;
@@ -21,12 +22,17 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Carreras
+
+
+        [Authorize(Roles ="Empleado")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Carreras.ToListAsync());
         }
 
         // GET: Carreras/Details/5
+
+        [Authorize(Roles = "Empleado")]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -45,6 +51,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Carreras/Create
+        [Authorize(Roles = "Empleado")]
         public IActionResult Create()
         {
             return View();
@@ -78,6 +85,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Carreras/Edit/5
+        [Authorize(Roles = "Empleado")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -97,6 +105,7 @@ namespace InstitutoEducativo.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Empleado")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("CarreraId,Nombre")] Carrera carrera)
         {
@@ -128,40 +137,42 @@ namespace InstitutoEducativo.Controllers
             return View(carrera);
         }
 
-        // GET: Carreras/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //GET: Carreras/Delete/5
+        //public async Task<IActionResult> Delete(Guid? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var carrera = await _context.Carreras
-                .FirstOrDefaultAsync(m => m.CarreraId == id);
-            if (carrera == null)
-            {
-                return NotFound();
-            }
+        //    var carrera = await _context.Carreras
+        //        .FirstOrDefaultAsync(m => m.CarreraId == id);
+        //    if (carrera == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(carrera);
-        }
+        //    return View(carrera);
+        //}
 
-        // POST: Carreras/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var carrera = await _context.Carreras.FindAsync(id);
-            _context.Carreras.Remove(carrera);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //POST: Carreras/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(Guid id)
+        //{
+        //    var carrera = await _context.Carreras.FindAsync(id);
+        //    _context.Carreras.Remove(carrera);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
+        [Authorize(Roles = "Empleado")]
         private bool CarreraExists(Guid id)
         {
             return _context.Carreras.Any(e => e.CarreraId == id);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> MostrarCarreras()
         {
             return View(_context.Carreras);

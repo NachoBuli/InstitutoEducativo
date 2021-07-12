@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace InstitutoEducativo.Controllers
 {
+    [Authorize]
     public class MateriasController : Controller
     {
         private readonly DbContextInstituto _context;
@@ -21,6 +22,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Materias
+        [Authorize(Roles = "Empleado")]
         public async Task<IActionResult> Index()
         {
             var dbContextInstituto = _context.Materias.Include(m => m.Carrera);
@@ -28,6 +30,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Materias/Details/5
+
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -47,6 +50,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Materias/Create
+        [Authorize(Roles = "Empleado")]
         public IActionResult Create()
         {
             ViewData["CarreraId"] = new SelectList(_context.Carreras, "CarreraId", "Nombre");
@@ -90,6 +94,7 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Materias/Edit/5
+        [Authorize(Roles = "Empleado")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -111,6 +116,7 @@ namespace InstitutoEducativo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Empleado")]
         public async Task<IActionResult> Edit(Guid id, [Bind("MateriaId,Nombre,CodigoMateria,Descripcion,CupoMaximo,CarreraId")] Materia materia)
         {
             if (id != materia.MateriaId)
@@ -143,40 +149,40 @@ namespace InstitutoEducativo.Controllers
         }
 
         // GET: Materias/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Delete(Guid? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var materia = await _context.Materias
-                .Include(m => m.Carrera)
-                .FirstOrDefaultAsync(m => m.MateriaId == id);
-            if (materia == null)
-            {
-                return NotFound();
-            }
+        //    var materia = await _context.Materias
+        //        .Include(m => m.Carrera)
+        //        .FirstOrDefaultAsync(m => m.MateriaId == id);
+        //    if (materia == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(materia);
-        }
+        //    return View(materia);
+        //}
 
         // POST: Materias/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var materia = await _context.Materias.FindAsync(id);
-            _context.Materias.Remove(materia);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(Guid id)
+        //{
+        //    var materia = await _context.Materias.FindAsync(id);
+        //    _context.Materias.Remove(materia);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         private bool MateriaExists(Guid id)
         {
             return _context.Materias.Any(e => e.MateriaId == id);
         }
-
+        [AllowAnonymous]
         public async Task<IActionResult> MostrarMateriasSegunCarrera(Guid ID)
         {
             //Guid cId = (Guid)ViewData["ID"];

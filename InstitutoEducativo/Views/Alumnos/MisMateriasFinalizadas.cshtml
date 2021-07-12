@@ -19,24 +19,29 @@
             <th>
                 @Html.Raw("Nombre Materia")
             </th>
-            <th></th>
+            <th>
+                @Html.Raw("Nota Final")
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+        <tr>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.MateriaCursada.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MateriaCursada.Materia.Nombre)
-                </td>
-                <td>
-                    <a class="btn btn-outline-secondary" asp-controller="MateriaCursadas" asp-action="Details" asp-route-id="@item.MateriaCursadaId">Detalle</a>
-                </td>
-            </tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MateriaCursada.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MateriaCursada.Materia.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Calificacion.NotaFinal)
+            </td>
+            <td>
+                <a class="btn btn-outline-secondary" asp-controller="MateriaCursadas" asp-action="Details" asp-route-id="@item.MateriaCursadaId">Detalle</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
