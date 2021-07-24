@@ -41,7 +41,32 @@ namespace InstitutoEducativo.Controllers
             ViewData["CarreraId"] = new SelectList(_miContexto.Carreras, "CarreraId", "Nombre");
             return View();
         }
+        [HttpGet, AllowAnonymous]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
 
+        [HttpPost, AllowAnonymous]
+        public async Task<IActionResult>ChangePassword(CambiarContrasenia model)
+        {
+            if(ModelState.IsValid){
+                var result = await ChangePasswordAsync(model);
+                if (result.Succeeded)
+                {
+                    ViewBag.IsSuccess = true;
+                    ModelState.Clear();
+                    return View();
+
+                }
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+
+            return View(model);
+        }
         [HttpPost, AllowAnonymous]
         public async Task<IActionResult> Registrar(RegistroUsuario modelo)
         {
@@ -231,6 +256,12 @@ namespace InstitutoEducativo.Controllers
         {
 
             return View(model: returnurl);
+        }
+
+        private async Task <IdentityResult> ChangePasswordAsync (CambiarContrasenia model)
+        {
+            Persona persona = await _userManager.GetUserAsync(HttpContext.User);
+            return await _userManager.ChangePasswordAsync(persona, model.CurrentPassword, model.ConfirmarNuevaContrasenia);
         }
 
 

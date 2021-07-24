@@ -62,6 +62,8 @@ namespace InstitutoEducativo.Data
 
         public DbSet<InstitutoEducativo.ViewModels.MateriaCursadaConNotaPromedio> MateriaCursadaConNotaPromedio { get; set; }
 
+        public DbSet<InstitutoEducativo.ViewModels.CambiarContrasenia> CambiarContrasenia { get; set; }
+
        
     }
 

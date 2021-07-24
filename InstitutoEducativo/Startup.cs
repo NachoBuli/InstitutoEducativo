@@ -52,6 +52,7 @@ namespace InstitutoEducativo
             services.AddControllersWithViews();
 
             services.AddScoped<IDbInicializador, DbInicializador>();
+            services.AddScoped<IUserClaimsPrincipalFactory<Persona>, ApplicationUserClaimsPrincipalFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
