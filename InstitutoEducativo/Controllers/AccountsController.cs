@@ -1,11 +1,14 @@
 ﻿using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
+using InstitutoEducativo.Repository;
+using InstitutoEducativo.Servicios;
 using InstitutoEducativo.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,12 +24,16 @@ namespace InstitutoEducativo.Controllers
         private readonly SignInManager<Persona> _signInManager;
         private readonly DbContextInstituto _miContexto;
         private readonly RoleManager<Rol> _roleManager;
+        private readonly IAccountRepository _accountRepository;
+
 
         public AccountsController(
             UserManager<Persona> userManager,
             SignInManager<Persona> signInManager,
             DbContextInstituto miContexto,
-            RoleManager<Rol> roleManager
+            RoleManager<Rol> roleManager,
+            IAccountRepository accountRepository
+
 
             )
         {
@@ -34,6 +41,8 @@ namespace InstitutoEducativo.Controllers
             this._signInManager = signInManager;
             this._miContexto = miContexto;
             this._roleManager = roleManager;
+            this._accountRepository = accountRepository;
+        
         }
         [HttpGet, AllowAnonymous]
         public IActionResult Registrar()
@@ -200,7 +209,23 @@ namespace InstitutoEducativo.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [AllowAnonymous, HttpGet("forgot-password")]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+        [AllowAnonymous, HttpPost("forgot-password")]
+        public IActionResult ForgotPassword(ForgotPassword model)
+        {
+            if (ModelState.IsValid)
+            {
+                
+                ModelState.Clear();
+                model.Emailsent = true;
+            }
 
+            return View(model);
+        }
 
         //public async Task<IActionResult> CrearRoles()
         //{
@@ -264,6 +289,8 @@ namespace InstitutoEducativo.Controllers
             return await _userManager.ChangePasswordAsync(persona, model.CurrentPassword, model.ConfirmarNuevaContrasenia);
         }
 
+      
+       
 
     }
 }

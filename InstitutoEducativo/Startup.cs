@@ -1,5 +1,7 @@
 using InstitutoEducativo.Data;
 using InstitutoEducativo.Models;
+using InstitutoEducativo.Repository;
+using InstitutoEducativo.Servicios;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -50,9 +52,12 @@ namespace InstitutoEducativo
                     opciones.AccessDeniedPath = "/Accounts/AccesoDenegado";
                 });
             services.AddControllersWithViews();
-
+            services.Configure<SMTPConfig>(Configuration.GetSection("SMTPConfig"));
             services.AddScoped<IDbInicializador, DbInicializador>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IUserClaimsPrincipalFactory<Persona>, ApplicationUserClaimsPrincipalFactory>();
+      
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

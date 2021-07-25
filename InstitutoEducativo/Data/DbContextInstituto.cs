@@ -64,6 +64,8 @@ namespace InstitutoEducativo.Data
 
         public DbSet<InstitutoEducativo.ViewModels.CambiarContrasenia> CambiarContrasenia { get; set; }
 
+        public DbSet<InstitutoEducativo.Models.ForgotPassword> ForgotPassword { get; set; }
+
        
     }
 
