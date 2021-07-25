@@ -62,7 +62,7 @@ namespace InstitutoEducativo.Servicios
 
         public async Task SendEmailForForgotPassword(UserEmailOptions userEmailOptions)
         {
-            userEmailOptions.Subject = UpdatePlaceHolders("Hola {{UserName}}, Resetear tu contraseña.", userEmailOptions.PlaceHolders);
+            userEmailOptions.Subject = UpdatePlaceHolders("Hola {{Username}}, reseteá tu contraseña.", userEmailOptions.PlaceHolders);
 
             userEmailOptions.Body = UpdatePlaceHolders(GetEmailBody("ForgotPassword"), userEmailOptions.PlaceHolders);
 

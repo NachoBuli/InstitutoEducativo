@@ -41,7 +41,7 @@ namespace InstitutoEducativo
             }
             //Creo tabla intermedia entre Persona y Rol
 
-            services.AddIdentity<Persona,Rol>().AddEntityFrameworkStores<DbContextInstituto>();
+            services.AddIdentity<Persona,Rol>().AddEntityFrameworkStores<DbContextInstituto>().AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options => options.Password.RequireNonAlphanumeric = false);
             

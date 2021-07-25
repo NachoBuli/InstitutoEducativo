@@ -54,13 +54,17 @@ namespace InstitutoEducativo.Repository
                 ToEmails = new List<string>() { user.Email },
                 PlaceHolders = new List<KeyValuePair<string, string>>()
                 {
-                    new KeyValuePair<string, string>("{{UserName}}", user.Nombre),
+                    new KeyValuePair<string, string>("{{Username}}", user.Nombre),
                     new KeyValuePair<string, string>("{{Link}}",
                         string.Format(appDomain + confirmationLink, user.Id, token))
                 }
             };
 
             await _emailService.SendEmailForForgotPassword(options);
+        }
+        public async Task<IdentityResult> ResetPasswordAsync(ResetPassword model)
+        {
+            return await _userManager.ResetPasswordAsync(await _userManager.FindByIdAsync(model.UserId), model.Token, model.NewPassword);
         }
 
     }

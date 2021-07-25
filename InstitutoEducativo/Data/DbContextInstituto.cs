@@ -66,6 +66,8 @@ namespace InstitutoEducativo.Data
 
         public DbSet<InstitutoEducativo.Models.ForgotPassword> ForgotPassword { get; set; }
 
+        public DbSet<InstitutoEducativo.Models.ResetPassword> ResetPassword { get; set; }
+
        
     }
 
